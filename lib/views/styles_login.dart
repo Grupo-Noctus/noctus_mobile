@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:noctus_mobile/utils/app_colors.dart';
+
+const textStyleRegister = TextStyle(
+  fontSize: 32,
+  fontWeight: FontWeight.bold,
+  color: AppColors.white,
+);
 
 const inputBorder = OutlineInputBorder(
-  borderSide: BorderSide(color: Colors.white),
+  borderSide: BorderSide(color: AppColors.white),
   borderRadius: BorderRadius.all(Radius.circular(16)),
 );
 
-const labelTextStyle = TextStyle(color: Colors.white38);
-const inputTextStyle = TextStyle(color: Colors.white);
+const labelTextStyle = TextStyle(color: AppColors.mediumGray);
+const inputTextStyle = TextStyle(color: AppColors.white);
 
 InputDecoration customInputDecoration(String label) => InputDecoration(
   labelText: label,
@@ -18,7 +25,12 @@ InputDecoration customInputDecoration(String label) => InputDecoration(
 );
 
 const buttonTextStyle = TextStyle(
-  color: Color(0xFF6BFF50),
+  color: AppColors.accentGreen,
   fontWeight: FontWeight.bold,
   fontFamily: 'Open Sans',
+);
+
+const textSpanRegisterStyle = TextStyle(
+  color: AppColors.accentGreen,
+  fontWeight: FontWeight.bold,
 );

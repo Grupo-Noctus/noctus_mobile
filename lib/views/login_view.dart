@@ -1,7 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:noctus_mobile/controllers/login_controller.dart';
+import 'package:noctus_mobile/utils/app_colors.dart';
 import 'package:noctus_mobile/utils/token_storage.dart';
 import 'package:noctus_mobile/views/home_view.dart';
+import 'package:noctus_mobile/views/register_view_p1.dart';
 import 'package:noctus_mobile/views/styles_login.dart';
 
 class LoginView extends StatefulWidget {
@@ -64,11 +67,7 @@ class _LoginViewState extends State<LoginView> {
                     const SizedBox(width: 4),
                     const Text(
                       'Login',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      style: textStyleRegister,
                     ),
                   ],
                 ),
@@ -76,7 +75,7 @@ class _LoginViewState extends State<LoginView> {
                 TextFormField(
                   controller: _emailController,
                   style: inputTextStyle,
-                  decoration: customInputDecoration('Username'),
+                  decoration: customInputDecoration('Username ou email'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Digite seu email ou username';
@@ -88,7 +87,7 @@ class _LoginViewState extends State<LoginView> {
                 TextFormField(
                   controller: _passwordController,
                   style: inputTextStyle,
-                  decoration: customInputDecoration('Password'),
+                  decoration: customInputDecoration('Senha'),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -109,6 +108,27 @@ class _LoginViewState extends State<LoginView> {
                       )
                     ),
                     child: const Text('LOGIN', style: buttonTextStyle),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                RichText(
+                  text: TextSpan(
+                    text: 'Não possui uma conta? ',
+                    style: TextStyle(
+                      color: AppColors.accentGreen,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: 'Clique aqui.',
+                        style: textSpanRegisterStyle,
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => const RegisterView()),
+                            );
+                          },
+                      ),
+                    ],
                   ),
                 ),
               ],

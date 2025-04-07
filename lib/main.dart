@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noctus_mobile/utils/app_colors.dart';
 import 'package:noctus_mobile/utils/token_storage.dart';
 import 'package:noctus_mobile/views/home_view.dart';
 import 'package:noctus_mobile/views/login_view.dart';
@@ -21,7 +22,7 @@ class Noctus extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Noctus',
       theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFF461CDC),
+        scaffoldBackgroundColor: AppColors.primaryBlue,
       ),
       initialRoute: isLoggedIn ? '/home' : '/login',
       routes: {

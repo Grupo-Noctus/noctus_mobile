@@ -1,8 +1,8 @@
-class LoginRequestDto {
+class Login {
   final String usernameOrEmail;
   final String password;
 
-  LoginRequestDto({
+  Login({
     required this.usernameOrEmail,
     required this.password
   });

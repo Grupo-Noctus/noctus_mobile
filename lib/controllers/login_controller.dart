@@ -1,19 +1,19 @@
-import 'package:noctus_mobile/models/auth_model.dart';
-import 'package:noctus_mobile/controllers/dto/login_request_dto.dart';
+import 'package:noctus_mobile/service/auth_service.dart';
+import 'package:noctus_mobile/models/login.dart';
 
 class LoginController {
-  final AuthModel _authModel = AuthModel();
+  final AuthService _authService = AuthService();
 
   Future<String?> login({
     required String usernameOrEmail,
     required String password,
   }) async {
-    final requestLogin = LoginRequestDto(
+    final requestLogin = Login(
       usernameOrEmail: usernameOrEmail,
       password: password,
     );
 
-    final token = await _authModel.login(requestLogin);
+    final token = await _authService.login(requestLogin);
     return token;
   }
 }

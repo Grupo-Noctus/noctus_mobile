@@ -2,17 +2,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:noctus_mobile/controllers/register_controller.dart';
+import 'package:noctus_mobile/service/auth_service.dart';
 import 'package:noctus_mobile/utils/app_colors.dart';
 import 'package:noctus_mobile/views/styles_login.dart';
 
-class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
+class RegisterViewP1 extends StatefulWidget {
+  const RegisterViewP1({super.key});
 
   @override
-  State<RegisterView> createState() => _RegisterViewState();
+  State<RegisterViewP1> createState() => _RegisterViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> {
+class _RegisterViewState extends State<RegisterViewP1> {
+  final RegisterController _registerController = RegisterController(AuthService());
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
@@ -151,18 +153,16 @@ Future<void> _pickImage() async {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
-                      final success = await RegisterController().register(
-                        username: _usernameController.text,
-                        name: _nameController.text,
-                        email: _emailController.text,
-                        password: _passwordController.text,
-                        phone: _phoneController.text,
-                        image: _selectedImage,
-                      );
-                      if(success) {
-
-                      } else {
-
+                       if (_formKey.currentState!.validate()) {
+                        _registerController.registerContext(
+                          context: context,
+                          username: _usernameController.text,
+                          name: _nameController.text,
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                          phone: _phoneController.text,
+                          image: _selectedImage,
+                        );
                       }
                     },
                     style: ElevatedButton.styleFrom(

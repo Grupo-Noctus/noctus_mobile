@@ -6,7 +6,13 @@ import 'package:noctus_mobile/models/register.dart';
 import 'package:noctus_mobile/utils/api_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthService {
+abstract interface class IAuthService {
+  Future<String?> login(Login dto);
+  Future<bool> register(Register dto, [File? imageFile]);
+}
+
+class AuthService implements IAuthService {
+  @override
   Future<String?> login(Login dto) async{
     final url = Uri.parse('${ApiConfig.baseUrl}/auth/login');
     final headers = {'Content-Type': 'application/json'};
@@ -29,11 +35,15 @@ class AuthService {
     }
   }
 
+  @override
   Future<bool> register(Register dto, [File? imageFile]) async {
     final url = Uri.parse('${ApiConfig.baseUrl}/auth/register');
 
     var request = http.MultipartRequest('POST', url);
-    request.fields['user'] = jsonEncode(dto.toJson());
+    request.fields['user'] = jsonEncode(dto.user.toJson());
+    if (dto.student != null) {
+      request.fields['student'] = jsonEncode(dto.student!.toJson());
+    }
 
     if (imageFile != null) {
       request.files.add(await http.MultipartFile.fromPath('image', imageFile.path));
@@ -42,7 +52,7 @@ class AuthService {
     try {
       final response = await request.send();
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return true;
       } else {
         final respStr = await response.stream.bytesToString();

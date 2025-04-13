@@ -34,3 +34,13 @@ const textSpanRegisterStyle = TextStyle(
   color: AppColors.accentGreen,
   fontWeight: FontWeight.bold,
 );
+
+InputDecoration customDropdownDecoration(String label) => InputDecoration(
+  labelText: label,
+  labelStyle: labelTextStyle,
+  enabledBorder: inputBorder,
+  focusedBorder: inputBorder,
+  errorBorder: inputBorder,
+  focusedErrorBorder: inputBorder,
+  contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+);

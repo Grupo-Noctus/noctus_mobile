@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noctus_mobile/utils/app_colors.dart';
 import 'package:noctus_mobile/utils/token_storage.dart';
-import 'package:noctus_mobile/views/course_description_view.dart';
 import 'package:noctus_mobile/views/course_view.dart';
 import 'package:noctus_mobile/views/home_view.dart';
 import 'package:noctus_mobile/views/login_view.dart';
@@ -29,7 +28,7 @@ class Noctus extends StatelessWidget {
       initialRoute: isLoggedIn ? '/login' : '/home',
       routes: {
         '/login': (context) => const LoginView(),
-        '/home': (context) => const ViewCourseDescription(), // trocar pra view cursos
+        '/home': (context) => const HomeView(), // trocar pra view cursos
         // adicione as novas rotas (views) 
       },
     );

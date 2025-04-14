@@ -77,7 +77,7 @@ class _HomeViewState extends State<HomeView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 100,
+                    height: 50,
                     width: double.infinity,
                     color: const Color.fromRGBO(70, 28, 220, 1.0),
                     child: Stack(

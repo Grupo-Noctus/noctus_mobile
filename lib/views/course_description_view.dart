@@ -1,156 +1,332 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:noctus_mobile/utils/app_colors.dart';
+import 'package:video_player/video_player.dart';
 
-// Componente ViewCourseDescription
-class ViewCourseDescription extends StatelessWidget {
-  const ViewCourseDescription({Key? key}) : super(key: key);
+class ViewCourse extends StatefulWidget {
+  const ViewCourse({Key? key}) : super(key: key);
+
+  @override
+  _ViewCourseState createState() => _ViewCourseState();
+}
+
+class _ViewCourseState extends State<ViewCourse> with WidgetsBindingObserver {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(
+      'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+    );
+    _controller.initialize().then((_) {
+      setState(() {});
+      _controller.play();
+    });
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeMetrics() {
+    final orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.landscape) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    } else {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void _togglePlayPause() {
+    setState(() {
+      _controller.value.isPlaying ? _controller.pause() : _controller.play();
+    });
+  }
+
+  Widget _buildLessonItem({
+    required String title,
+    required String duration,
+    bool isCurrent = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: isCurrent ? AppColors.primaryBlue : Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 6,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsets.only(right: 20),
+            child: Icon(
+              Icons.play_arrow,
+              color: isCurrent ? Colors.white : AppColors.primaryBlue,
+              size: 28,
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  duration,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            Icons.chevron_right,
+            color: AppColors.accentGreen,
+            size: 35,
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          // Background with "CURSO DE UX/UI" text
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Colors.black, // Background color
-            child: Center(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // "CURSO DE" text
-                  Text(
-                    "CURSO DE",
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  // "UX/UI" text with colored letters
-                  Positioned(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "UX",
-                          style: TextStyle(
-                            fontSize: 80,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange,
-                          ),
-                        ),
-                        Text(
-                          "/",
-                          style: TextStyle(
-                            fontSize: 80,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.purple,
-                          ),
-                        ),
-                        Text(
-                          "UI",
-                          style: TextStyle(
-                            fontSize: 80,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange,
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Icon(
-                          Icons.arrow_right_alt,
-                          color: Colors.white,
-                          size: 60,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+    final orientation = MediaQuery.of(context).orientation;
+    final screenSize = MediaQuery.of(context).size;
+
+    final videoWidget = Stack(
+      children: [
+        SizedBox.expand(
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: _controller.value.size.width,
+              height: _controller.value.size.height,
+              child: VideoPlayer(_controller),
+            ),
+          ),
+        ),
+        Center(
+          child: GestureDetector(
+            onTap: _togglePlayPause,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              padding: const EdgeInsets.all(12),
+              child: Icon(
+                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                color: AppColors.primaryBlue,
+                size: 36,
               ),
             ),
           ),
-          // Bottom card section
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.35,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
+        ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top,
+              left: 16,
+              right: 16,
+            ),
+            height: 56 + MediaQuery.of(context).padding.top,
+            color: Colors.black.withOpacity(0.0),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16, bottom: 12.0),
+                child: Image.asset(
+                  'assets/images/M Matera.png',
+                  width: 24,
+                  height: 24,
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+          ),
+        ),
+      ],
+    );
+
+    return Scaffold(
+      backgroundColor: AppColors.lightGray,
+      body: _controller.value.isInitialized
+          ? orientation == Orientation.landscape
+              ? Center(
+                  child: SizedBox(
+                    width: screenSize.width,
+                    height: screenSize.height,
+                    child: videoWidget,
+                  ),
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    // Title
-                    Text(
-                      "UX/UI Designer",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SizedBox(
+                      height: screenSize.height / 3,
+                      width: double.infinity,
+                      child: videoWidget,
                     ),
-                    SizedBox(height: 10),
-                    // Duration
-                    Row(
-                      children: [
-                        Icon(Icons.access_time, size: 16, color: Colors.grey),
-                        SizedBox(width: 5),
-                        Text(
-                          "5:0 Days",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.zero,
+                        padding: EdgeInsets.zero,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    // Description
-                    Text(
-                      "Description\n\n"
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Digrissim eget amer viverra "
-                      "agat lorenz, thendies. Egat eiptm venenatis enim porte ageaiss malaouda et. Consequet mauris "
-                      "iacus eulamod montas.",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    Spacer(),
-                    // Play button
-                    Align(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                        ),
-                        child: Text(
-                          "Play",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "UX/UI Designer",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                                  const SizedBox(width: 5),
+                                  const Text(
+                                    "6h 30 min",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  const Text(
+                                    "28 lessons",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 120),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromRGBO(33, 150, 243, 0.1),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: const [
+                                        Icon(Icons.star, size: 18, color: Colors.yellow),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          "4.9",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.lightBlue,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0, left: 75.0, right: 20.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Lessons",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.accentGreen,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Container(
+                                      height: 2,
+                                      width: 80,
+                                      color: AppColors.accentGreen,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              _buildLessonItem(
+                                title: "    Introduction to Figma",
+                                duration: "04:28 min",
+                                isCurrent: true,
+                              ),
+                              _buildLessonItem(
+                                title: "    Understanding Interface",
+                                duration: "06:12 min",
+                              ),
+                              _buildLessonItem(
+                                title: "    Create first design project",
+                                duration: "43:50 min",
+                              ),
+                              Opacity(
+                                opacity: 0.2,
+                                child: _buildLessonItem(
+                                  title: "    Prototyping the design",
+                                  duration: "26:18 min",
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              const Spacer(),
+                              Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 60, left: 5),
+                                  child: ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.primaryBlue,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                                    ),
+                                    child: const Text(
+                                      "Play",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
                   ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+                )
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 }

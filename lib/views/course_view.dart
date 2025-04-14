@@ -229,15 +229,15 @@ class _ViewCourseState extends State<ViewCourse> with WidgetsBindingObserver {
                                   ),
                                 ),
                                 SizedBox(width: 120),
-                                // Removido 'const' para corrigir o erro
-                                Container(
+                                
+                              Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
                                 decoration: BoxDecoration(
                                   color: Color.fromRGBO(33, 150, 243, 0.1),
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: Row(
-                                  mainAxisSize: MainAxisSize.min, // Para garantir que o conteúdo ocupe apenas o espaço necessário
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(Icons.star, size: 18, color: Colors.yellow),
                                     SizedBox(width: 5),
@@ -255,9 +255,9 @@ class _ViewCourseState extends State<ViewCourse> with WidgetsBindingObserver {
                             ),
                               const SizedBox(height: 20),
 
-                              // Adicionando o título "Lessons" com a linha abaixo
-                              Padding(
-                              padding: const EdgeInsets.only(bottom: 16.0, left: 75.0, right: 20.0), // Adiciona mais espaço nas laterais
+                              
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16.0, left: 75.0, right: 20.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -272,11 +272,11 @@ class _ViewCourseState extends State<ViewCourse> with WidgetsBindingObserver {
                                   ),
                                   const SizedBox(height: 5),
                                   
-                                  // Linha abaixo do título "Lessons" (ajustando a largura)
+                                  
                                   Container(
                                     height: 2,
-                                    width: 80, // Tamanho ajustado da linha
-                                    color: AppColors.accentGreen, // Cor da linha
+                                    width: 80,
+                                    color: AppColors.accentGreen,
                                   ),
                                 ],
                               ),
@@ -297,7 +297,7 @@ class _ViewCourseState extends State<ViewCourse> with WidgetsBindingObserver {
                                 duration: "43:50 min",
                               ),
                               Opacity(
-                                opacity: 0.2, // valor entre 0.0 (invisível) e 1.0 (opaco)
+                                opacity: 0.2,
                                 child: _buildLessonItem(
                                   title: "    Prototyping the design",
                                   duration: "26:18 min",
@@ -310,17 +310,16 @@ class _ViewCourseState extends State<ViewCourse> with WidgetsBindingObserver {
                               Align(
                                 alignment: Alignment.bottomLeft,
                                 child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 60, left: 5), // ← ajustado aqui
+                                  padding: const EdgeInsets.only(bottom: 60, left: 5),
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      _togglePlayPause();
-                                    },
+                                      },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.primaryBlue,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(30),
                                       ),
-                                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                                     ),
                                     child: const Text(
                                       "Play",

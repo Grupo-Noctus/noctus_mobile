@@ -1,19 +1,39 @@
-import 'package:noctus_mobile/models/auth_model.dart';
-import 'package:noctus_mobile/controllers/dto/login_request_dto.dart';
+import 'package:flutter/material.dart';
+import 'package:noctus_mobile/service/auth_service.dart';
+import 'package:noctus_mobile/models/login.dart';
+import 'package:noctus_mobile/utils/token_storage.dart';
+import 'package:noctus_mobile/views/home_view.dart';
 
 class LoginController {
-  final AuthModel _authModel = AuthModel();
+  final IAuthService _authService;
+  const LoginController(this._authService);
 
-  Future<String?> login({
+  Future<void> loginContext({
+    required BuildContext context,
     required String usernameOrEmail,
     required String password,
   }) async {
-    final requestLogin = LoginRequestDto(
+    final requestLogin = Login(
       usernameOrEmail: usernameOrEmail,
       password: password,
     );
 
-    final token = await _authModel.login(requestLogin);
-    return token;
+
+    final token = await _authService.login(requestLogin);
+    
+    if (token != null) {
+      await TokenStorage.saveAccessToken(token);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeView()),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login bem-sucedido!')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Usuário ou senha inválidos.')),
+      );
+    }
   }
 }

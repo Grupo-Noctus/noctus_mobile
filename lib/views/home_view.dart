@@ -31,9 +31,9 @@ class _HomeViewState extends State<HomeView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Image.asset(
-              'assets/images/intituto-matera.png',
-              width: 190,
-              height: 190,
+              'assets/images/instituto-matera.png',
+              width: 170,
+              height: 170,
             ),
           ],
         ),
@@ -161,11 +161,9 @@ class _HomeViewState extends State<HomeView> {
                   ),
 
                 const SizedBox(height: 32),
-
-                // Outros Cursos
                 Row(
                   children: [
-                    Icon(Icons.explore, color: AppColors.primaryBlue),
+                    Icon(Icons.menu_book, color: AppColors.primaryBlue),
                     const SizedBox(width: 8),
                     const Text(
                       'Outros Cursos',

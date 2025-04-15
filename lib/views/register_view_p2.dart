@@ -5,7 +5,7 @@ import 'package:noctus_mobile/models/register.dart';
 import 'package:noctus_mobile/models/register_enuns.dart';
 import 'package:noctus_mobile/service/auth_service.dart';
 import 'package:noctus_mobile/utils/app_colors.dart';
-import 'package:noctus_mobile/views/styles_login.dart';
+import 'package:noctus_mobile/views/styles.dart';
 
 class RegisterViewP2 extends StatefulWidget {
   final RegisterUserDto userDto;

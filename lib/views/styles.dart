@@ -7,6 +7,18 @@ const textStyleRegister = TextStyle(
   color: AppColors.white,
 );
 
+const textStyleAppBar = TextStyle(
+  fontSize: 24,
+  fontWeight: FontWeight.w200,
+  color: AppColors.white,
+);
+
+const textStyleNoCourse = TextStyle(
+  fontSize: 24,
+  fontWeight: FontWeight.w200,
+  color: AppColors.darkBlack,
+);
+
 const inputBorder = OutlineInputBorder(
   borderSide: BorderSide(color: AppColors.white),
   borderRadius: BorderRadius.all(Radius.circular(16)),

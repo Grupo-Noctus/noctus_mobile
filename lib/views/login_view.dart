@@ -4,7 +4,7 @@ import 'package:noctus_mobile/controllers/login_controller.dart';
 import 'package:noctus_mobile/service/auth_service.dart';
 import 'package:noctus_mobile/utils/app_colors.dart';
 import 'package:noctus_mobile/views/register_view_p1.dart';
-import 'package:noctus_mobile/views/styles_login.dart';
+import 'package:noctus_mobile/views/styles.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});

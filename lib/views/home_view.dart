@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:noctus_mobile/providers/auth_provider.dart';
+import 'package:noctus_mobile/views/styles.dart';
+import 'package:provider/provider.dart';
+import 'package:noctus_mobile/controllers/couses_controller.dart';
 import 'package:noctus_mobile/utils/app_colors.dart';
-
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -10,305 +13,256 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  int currentPageIndex = 0;
-
+  late CourseController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = Provider.of<CourseController>(context, listen: false);
+    _controller.loadEnrolledCourses();
+    _controller.fetchAllCourses();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
-      bottomNavigationBar: Padding(
-      padding: const EdgeInsets.all(13.0),
-      child: Material(
-        elevation: 8,
-        shadowColor: Colors.black.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(40),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(40),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 12,
-                offset: const Offset(0, 0),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(40),
-            child: NavigationBarTheme(
-              data: NavigationBarThemeData(
-                indicatorColor: const Color.fromRGBO(70, 28, 220, 0.7),
-                indicatorShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-                backgroundColor: AppColors.white,
-              ),
-              child: NavigationBar(
-                onDestinationSelected: (int index) {
-                  setState(() {
-                    currentPageIndex = index;
-                  });
-                },
-                selectedIndex: currentPageIndex,
-                destinations: const <Widget>[
-                  NavigationDestination(
-                    selectedIcon: Icon(Icons.home),
-                    icon: Icon(Icons.home_outlined),
-                    label: '',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.person),
-                    label: '',
-                  ),
-                ],
-              ),
+      backgroundColor: AppColors.lightGray,
+      appBar: AppBar(
+        backgroundColor: AppColors.primaryBlue,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(
+              'assets/images/intituto-matera.png',
+              width: 190,
+              height: 190,
             ),
-          ),
+          ],
         ),
-      ),
-    ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: AppColors.lightGray,),
+            tooltip: 'Sair',
+            onPressed: () {
+              Provider.of<AuthProvider>(context, listen: false).logout(context);
+            },
+          ),
+        ],
+        ),
+      body: Consumer<CourseController>(
+        builder: (context, controller, child) {
+          if (controller.enrolledLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (controller.enrolledError != null) {
+            return Center(child: Text('Erro: ${controller.enrolledError}'));
+          }
 
-      body: IndexedStack(
-        index: currentPageIndex,
-        children: [
-          Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    color: const Color.fromRGBO(70, 28, 220, 1.0),
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0, left: 10.0),
-                            child: Text(
-                              'Instituto Matera',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 16, bottom: 12.0),
-                            child: Image.asset(
-                              'assets/images/M Matera.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text(
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.school, color: AppColors.primaryBlue),
+                    const SizedBox(width: 8),
+                    const Text(
                       'Meus Cursos',
-                      style: TextStyle(
-                        color: AppColors.darkBlack,
-                        fontSize: 18,
-                      ),
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Card(
-                      shadowColor: Colors.transparent,
-                      margin: const EdgeInsets.only(left: 16),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: SizedBox(
-                          height: 290,
-                          width: 330,
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              Image.asset(
-                                'assets/images/cursoUX-UI.jpeg',
-                                fit: BoxFit.cover,
-                              ),
-                              Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 95,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.4),
-                                    borderRadius: const BorderRadius.only(
-                                      bottomLeft: Radius.circular(16),
-                                      bottomRight: Radius.circular(16),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                if (controller.enrolledCourses.isEmpty)
+                  Center(
+                    child: Text(
+                      'Sem matriculas',
+                      style: textStyleNoCourse,
+                    ),
+                  )
+                else
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: controller.enrolledCourses.map((course) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Card(
+                            shadowColor: AppColors.darkBlack.withOpacity(0.4),
+                            margin: const EdgeInsets.only(left: 4),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: SizedBox(
+                                height: 250,
+                                width: MediaQuery.of(context).size.width - 36,
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    controller.buildCourseImage(course.courseImage),
+                                    Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.darkBlack.withOpacity(0.4),
+                                          borderRadius: const BorderRadius.only(
+                                            bottomLeft: Radius.circular(16),
+                                            bottomRight: Radius.circular(16),
+                                          ),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              course.courseName,
+                                              style: TextStyle(
+                                                color: AppColors.white,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                shadows: [
+                                                  Shadow(
+                                                    color: AppColors.darkBlack,
+                                                    blurRadius: 6,
+                                                    offset: Offset(1, 1),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(height: 6),
+                                            Text(
+                                              'Acessar curso',
+                                              style: TextStyle(
+                                                color: AppColors.white,
+                                                fontSize: 14,
+                                                shadows: [
+                                                  Shadow(
+                                                    color: AppColors.darkBlack,
+                                                    blurRadius: 4,
+                                                    offset: Offset(1, 1),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: const [
-                                      Text(
-                                        'UX/UI Designer',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          shadows: [
-                                            Shadow(
-                                              color: Colors.black,
-                                              blurRadius: 6,
-                                              offset: Offset(1, 1),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: 6),
-                                      Text(
-                                        'Acessar curso',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          shadows: [
-                                            Shadow(
-                                              color: Colors.black,
-                                              blurRadius: 4,
-                                              offset: Offset(1, 1),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  ],
                                 ),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      }).toList(),
                     ),
                   ),
-                  const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Text(
-                      'View All',
-                      style: TextStyle(
-                        color: AppColors.darkBlack,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: customCard(
-                            'assets/images/curso-Docker.jpeg',
-                            'Introdução ao Docker',
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: customCard(
-                            'assets/images/curso-Java.jpeg',
-                            'Java Avançado',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 80),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox.shrink(),
-          const SizedBox.shrink(),
-        ],
-      ),
-    );
-  }
 
-  Widget customCard(String imagePath, String title) {
-    return Card(
-      shadowColor: Colors.transparent,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: SizedBox(
-          height: 220,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.asset(
-                imagePath,
-                fit: BoxFit.cover,
-              ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  width: double.infinity,
-                  height: 95,
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.4),
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(16),
-                      bottomRight: Radius.circular(16),
+                const SizedBox(height: 32),
+
+                // Outros Cursos
+                Row(
+                  children: [
+                    Icon(Icons.explore, color: AppColors.primaryBlue),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Outros Cursos',
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black,
-                              blurRadius: 4,
-                              offset: Offset(1, 1),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        'Acessar cursos',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black,
-                              blurRadius: 4,
-                              offset: Offset(1, 1),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
+                const SizedBox(height: 16),
+                GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 3 / 3,
+                  ),
+                  itemCount: controller.allCourses.length,
+                  itemBuilder: (context, index) {
+                    final course = controller.allCourses[index];
+                    return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    shadowColor: AppColors.darkBlack.withOpacity(0.4),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: SizedBox(
+                        height: 250,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            controller.buildCourseImage(course.image),
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Container(
+                                width: double.infinity,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: AppColors.darkBlack.withOpacity(0.4),
+                                  borderRadius: const BorderRadius.only(
+                                    bottomLeft: Radius.circular(16),
+                                    bottomRight: Radius.circular(16),
+                                  ),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      course.name,
+                                      style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        shadows: [
+                                          Shadow(
+                                            color: AppColors.darkBlack,
+                                            blurRadius: 6,
+                                            offset: Offset(1, 1),
+                                          ),
+                                        ],
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Ver mais',
+                                      style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: 14,
+                                        shadows: [
+                                          Shadow(
+                                            color: AppColors.darkBlack,
+                                            blurRadius: 4,
+                                            offset: Offset(1, 1),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                  },
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

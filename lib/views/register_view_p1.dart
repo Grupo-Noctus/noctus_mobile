@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:noctus_mobile/controllers/register_controller.dart';
 import 'package:noctus_mobile/service/auth_service.dart';
 import 'package:noctus_mobile/utils/app_colors.dart';
-import 'package:noctus_mobile/views/styles_login.dart';
+import 'package:noctus_mobile/views/styles.dart';
 
 class RegisterViewP1 extends StatefulWidget {
   const RegisterViewP1({super.key});

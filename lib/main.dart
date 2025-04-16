@@ -46,7 +46,7 @@ class Noctus extends StatelessWidget {const Noctus({super.key});
       supportedLocales: [
         const Locale('pt', 'BR'),
       ],
-      initialRoute: isLoggedIn ? '/home' : '/login',
+      initialRoute: isLoggedIn ? '/login' : '/home',
       routes: {
         '/login': (context) => const LoginView(),
         '/home': (context) => const HomeView(), // trocar pra view cursos

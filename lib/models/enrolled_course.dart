@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:noctus_mobile/utils/api_config.dart';
 
 class EnrolledCourse {
@@ -41,6 +42,10 @@ class EnrolledCourse {
       courseStartDate: DateTime.parse(json['courseStartDate']),
       courseEndDate: DateTime.parse(json['courseEndDate']),
     );
+  }
+
+  int get durationCourse {
+    return courseEndDate.difference(courseStartDate).inDays;
   }
 }
 

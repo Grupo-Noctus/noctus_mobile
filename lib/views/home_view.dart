@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:noctus_mobile/models/all_courses.dart';
 import 'package:noctus_mobile/providers/auth_provider.dart';
 import 'package:noctus_mobile/views/styles.dart';
 import 'package:provider/provider.dart';
 import 'package:noctus_mobile/controllers/couses_controller.dart';
 import 'package:noctus_mobile/utils/app_colors.dart';
+import 'package:noctus_mobile/views/course_description_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -87,6 +89,15 @@ class _HomeViewState extends State<HomeView> {
                       children: controller.enrolledCourses.map((course) {
                         return Padding(
                           padding: const EdgeInsets.only(right: 16.0),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViewDescriptionCourse(enrolledCourse: course),
+                                ),
+                              );
+                            },                          
                           child: Card(
                             shadowColor: AppColors.darkBlack.withOpacity(0.4),
                             margin: const EdgeInsets.only(left: 4),
@@ -155,6 +166,7 @@ class _HomeViewState extends State<HomeView> {
                               ),
                             ),
                           ),
+                          )
                         );
                       }).toList(),
                     ),
@@ -184,7 +196,17 @@ class _HomeViewState extends State<HomeView> {
                   itemCount: controller.allCourses.length,
                   itemBuilder: (context, index) {
                     final course = controller.allCourses[index];
-                    return Card(
+                    
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViewDescriptionCourse(allCourses: course),
+                          ),
+                        );
+                      },
+                      child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -254,7 +276,9 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ),
                     ),
+                    ),
                   );
+                    
                   },
                 ),
               ],

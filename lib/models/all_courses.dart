@@ -23,4 +23,8 @@ class AllCourses {
       endDate: DateTime.parse(json['endDate']),
     );
   }
+
+  int get durationCourse {
+    return endDate.difference(startDate).inDays;
+  }
 }

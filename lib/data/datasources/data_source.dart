@@ -1,5 +1,6 @@
 
 
+import 'package:dio/dio.dart';
 import 'package:noctus_mobile/configs/factory_viewmodel.dart';
 import 'package:noctus_mobile/domain/entities/core/http_response_entity.dart';
 
@@ -37,11 +38,11 @@ abstract interface class INonRelationalDataSource {
 }
 
 abstract interface class IRemoteDataSource {
-  Future<HttpResponseEntity>? get(String url);
-  Future<HttpResponseEntity?>? post(String url, [String? data]);
-  Future<HttpResponseEntity?>? put(String url, [String? data]);
-  Future<HttpResponseEntity?>? patch(String url, [String? data]);
-  Future<HttpResponseEntity?>? delete(String url, [String? data]);
+  Future<HttpResponseEntity> get(String url);
+  Future<HttpResponseEntity?> post(String url, [dynamic data]);
+  Future<HttpResponseEntity?> put(String url, [dynamic data]);
+  Future<HttpResponseEntity?> patch(String url, [dynamic data]);
+  Future<HttpResponseEntity?> delete(String url, [dynamic data]);
   IEnvironmentHelper? get environment;
   DateTime? get currentDateTime;
 }

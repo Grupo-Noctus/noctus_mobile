@@ -20,4 +20,11 @@ final class UtilValidator {
     final RegExp regExp = RegExp(regex);
     return regExp.hasMatch(value);
   }
+
+  static bool isValidUsername(String username) {
+    if (username.trim().isEmpty) return false;
+    const String regex = r'^[a-zA-Z0-9._]{3,}$';
+    return _hasMatch(username, regex);
+  }
+
 }

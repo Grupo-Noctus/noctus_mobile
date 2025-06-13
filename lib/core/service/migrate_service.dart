@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:noctus_mobile/configs/data_base_schema_helper.dart';
 import 'package:noctus_mobile/core/library/extensions.dart' show ParsingStringList;
+import 'package:noctus_mobile/domain/entities/logged/user_logged.dart';
 import 'package:sqflite/sqflite.dart';
 
 export 'package:sqflite/sqflite.dart' show Database, ConflictAlgorithm, Batch;
@@ -67,7 +68,7 @@ final class MigrateService implements IMigrateService {
 
   @override
   Future<void> onCreate(Database db, int _) async {
-    await _createTableUsuario(db);
+    await _createTableUser(db);
   }
 
   @override
@@ -75,18 +76,19 @@ final class MigrateService implements IMigrateService {
     if (newVersion > oldVersion) {}
   }
 
-//Incluir as tabelas do sistema
-  // Future<void> _createTableUsuario(Database db) async {
-  //   await db.execute(
-  //     '''
-  //     CREATE TABLE IF NOT EXISTS ${DataBaseSchemaHelper.kUser} (
-  //     ${UserEntity.kKeyId} $kTypeText,
-  //     ${UserEntity.kKeyName} $kTypeText,
-  //     ${UserEntity.kKeyEmail} $kTypeText,
-  //     ${UserEntity.kKeyAddress} $kTypeText)
-  //      ''',
-  //   );
-  // }
+  Future<void> _createTableUser(Database db) async {
+    await db.execute(
+      '''
+      CREATE TABLE IF NOT EXISTS ${DataBaseSchemaHelper.kUser} (
+      ${UserLoggedEntity.kKeyId} $kTypeInteger PRIMARY KEY,
+      ${UserLoggedEntity.kKeyName} $kTypeText,
+      ${UserLoggedEntity.kKeyImage} $kTypeText,
+      ${UserLoggedEntity.kKeyRole} $kTypeText,
+      ${UserLoggedEntity.kKeyActive} $kTypeInteger
+      )
+       ''',
+    );
+  }
 
   @override
   Future<void> closeDataBase() async {

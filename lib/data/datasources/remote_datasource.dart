@@ -20,7 +20,7 @@ base class RemoteDataSource implements IRemoteDataSource {
   }
 
   @override
-  Future<HttpResponseEntity?> post(String url, [String? data]) async {
+  Future<HttpResponseEntity?> post(String url, [dynamic data]) async {
     try {
       return await _http.post(url, data: data);
     } catch (_) {
@@ -29,7 +29,7 @@ base class RemoteDataSource implements IRemoteDataSource {
   }
 
   @override
-  Future<HttpResponseEntity?> put(String url, [String? data]) async {
+  Future<HttpResponseEntity?> put(String url, [dynamic data]) async {
     try {
       return await _http.put(url, data: data);
     } catch (_) {
@@ -38,7 +38,7 @@ base class RemoteDataSource implements IRemoteDataSource {
   }
 
   @override
-  Future<HttpResponseEntity?> patch(String url, [String? data]) async {
+  Future<HttpResponseEntity?> patch(String url, [dynamic data]) async {
     try {
       return await _http.patch(url, data: data);
     } catch (_) {
@@ -47,7 +47,7 @@ base class RemoteDataSource implements IRemoteDataSource {
   }
 
   @override
-  Future<HttpResponseEntity?> delete(String url, [String? data]) async {
+  Future<HttpResponseEntity?> delete(String url, [dynamic data]) async {
     try {
       return await _http.delete(url, data: data);
     } catch (_) {

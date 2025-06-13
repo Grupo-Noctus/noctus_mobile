@@ -21,6 +21,7 @@ dependencies:
   intl: ^0.20.2
   shared_preferences: 2.5.2
   sqflite: 2.4.2
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
@@ -33,4 +34,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/demonstracao-consumo-coinmarketcap.gif
+    - assets/

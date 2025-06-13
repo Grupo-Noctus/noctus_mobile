@@ -1,5 +1,6 @@
 abstract interface class IEnvironmentHelper {
   String? get urlAuthentication;
+  String? get urlRegister;
 }
 
 final class EnvironmentHelper implements IEnvironmentHelper {
@@ -9,4 +10,7 @@ final class EnvironmentHelper implements IEnvironmentHelper {
 
   @override
   String? get urlAuthentication => '$_urlBase/auth/login';
+
+  @override
+  String? get urlRegister => '$_urlBase/auth/register';
 }

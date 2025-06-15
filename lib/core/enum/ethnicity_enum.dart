@@ -1,10 +1,12 @@
-enum Ethnicity {
-  white('WHITE', 'White'),
-  black('BLACK', 'Black'),
-  brown('BROWN', 'Brown'),
-  asian('ASIAN', 'Asian'),
-  indigenous('INDIGENOUS', 'Indigenous'),
-  other('OTHER', 'Other');
+import 'package:noctus_mobile/core/library/extensions.dart';
+
+enum Ethnicity implements LabeledEnum {
+  white('WHITE', 'Branca'),
+  black('BLACK', 'Preta'),
+  brown('BROWN', 'Parda'),
+  asian('ASIAN', 'Amarela'),
+  indigenous('INDIGENOUS', 'Indígena'),
+  other('OTHER', 'Outra');
 
   final String value;
   final String label;

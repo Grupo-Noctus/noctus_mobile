@@ -1,4 +1,6 @@
-enum BrazilianState {
+import 'package:noctus_mobile/core/library/extensions.dart';
+
+enum BrazilianState implements LabeledEnum {
   ac('AC', 'Acre'),
   al('AL', 'Alagoas'),
   ap('AP', 'Amapá'),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noctus_mobile/configs/theme_helper.dart';
-import 'package:noctus_mobile/core/enum/gender_enum.dart';
+import 'package:noctus_mobile/core/library/extensions.dart';
 
 class RegisterEnumDropdownWidget<T extends Enum> extends StatelessWidget {
   final String label;
@@ -23,17 +23,17 @@ class RegisterEnumDropdownWidget<T extends Enum> extends StatelessWidget {
     return DropdownButtonFormField<T>(
       value: selectedValue,
       items: values.map((e) {
-        final displayLabel = (e is Gender) ? e.label : e.name;
+        final label = (e as LabeledEnum).label;
         return DropdownMenuItem<T>(
           value: e,
           child: Text(
-            displayLabel,
+            label,
             style: ThemeHelper.inputTextStyle,
           ),
         );
       }).toList(),
       onChanged: onChanged,
-      validator: validator, // 👈 validação aqui
+      validator: validator,
       iconEnabledColor: ThemeHelper.kAccentGreen,
       dropdownColor: ThemeHelper.kDarkBlack,
       decoration: ThemeHelper.buildInputDecoration(labelText: label),

@@ -34,7 +34,6 @@ final class RegisterEntity {
         contentType: mimeType != null ? MediaType.parse(mimeType) : null,
       );
     }
-
     return FormData.fromMap(map);
   }
 }

@@ -15,7 +15,7 @@ void showSnackBar(
     content: Text(
       msg,
       style: const TextStyle(
-        color: ThemeHelper.kAccentGreen, // ou qualquer cor que combine com o fundo
+        color: ThemeHelper.kAccentGreen,
         fontWeight: FontWeight.w500,
       ),
     ),

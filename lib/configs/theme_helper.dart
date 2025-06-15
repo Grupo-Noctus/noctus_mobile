@@ -20,6 +20,23 @@ final class ThemeHelper {
     fontFamily: 'Open Sans',
   );
 
+  static SwitchThemeData get switchTheme {
+    return SwitchThemeData(
+      thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
+        if (states.contains(WidgetState.selected)) {
+          return kAccentGreen;
+        }
+        return kDarkBlack;
+      }),
+      trackColor: WidgetStateProperty.resolveWith<Color>((states) {
+        if (states.contains(WidgetState.selected)) {
+          return kAccentGreen.withValues(alpha: (0.5 * 255));
+        }
+        return kDarkBlack;
+      }),
+    );
+  }
+
   static ThemeData get theme {
     return ThemeData(
       primaryColor: kPrimaryBlue,
@@ -51,6 +68,7 @@ final class ThemeHelper {
           fontFamily: 'Open Sans',
         ),
       ),
+      switchTheme: switchTheme,
     );
   }
 

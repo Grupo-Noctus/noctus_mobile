@@ -24,7 +24,6 @@ final class RegisterRepository implements IRegisterRepository {
         return data.toLowerCase() == 'true';
       }
     }
-
     return false;
   }
 

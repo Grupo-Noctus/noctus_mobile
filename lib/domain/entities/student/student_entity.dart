@@ -62,10 +62,8 @@ final class StudentEntity {
       localSupportDescription.isNotEmpty) {
     map[kKeySupportResourcesDescription] = localSupportDescription;
   }
-
   return map;
 }
-
 
   static const String kKeyDateBirth = 'dateBirth';
   static const String kKeyEducationLevel = 'educationLevel';

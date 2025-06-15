@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:noctus_mobile/configs/assets_helper.dart';
 import 'package:noctus_mobile/configs/theme_helper.dart';
 import 'package:noctus_mobile/core/enum/brasilian_state_enum.dart';
 import 'package:noctus_mobile/core/enum/education_level_enum.dart';
@@ -13,7 +14,6 @@ import 'package:noctus_mobile/ui/register/view_models/register_view_model.dart';
 import 'package:noctus_mobile/ui/register/widgets/register_button_widget.dart';
 import 'package:noctus_mobile/ui/register/widgets/register_datepicker_widget.dart';
 import 'package:noctus_mobile/ui/register/widgets/register_enum_field_widget.dart';
-
 final class StudentRegisterPage extends StatelessWidget {
   final RegisterEntity registerEntity;
 
@@ -31,14 +31,12 @@ final class StudentRegisterPage extends StatelessWidget {
     );
   }
 }
-
 class _StudentRegisterPage extends StatefulWidget {
   const _StudentRegisterPage();
 
   @override
   State<_StudentRegisterPage> createState() => _StudentRegisterPageState();
 }
-
 class _StudentRegisterPageState extends State<_StudentRegisterPage> {
   final _formKey = GlobalKey<FormState>();
 
@@ -85,7 +83,27 @@ class _StudentRegisterPageState extends State<_StudentRegisterPage> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          AssetsHelper.assetsM,
+                          width: 50,
+                          height: 50,
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'Cadastro',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold, 
+                            color: ThemeHelper.kLightGray,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
                     FormField<DateTime>(
                       validator: (_) => _dateBirth == null
                           ? 'Por favor, selecione sua data de nascimento.'
@@ -103,16 +121,16 @@ class _StudentRegisterPageState extends State<_StudentRegisterPage> {
                             },
                           ),
                           if (state.hasError)
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12, top: 6),
-                              child: Text(
-                                state.errorText!,
-                                style: const TextStyle(
-                                  color: ThemeHelper.kAccentGreen,
-                                  fontSize: 12,
-                                ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12, top: 6),
+                            child: Text(
+                              state.errorText!,
+                              style: const TextStyle(
+                                color: ThemeHelper.kAccentGreen,
+                                fontSize: 12,
                               ),
                             ),
+                          ),
                         ],
                       ),
                     ),
@@ -155,7 +173,10 @@ class _StudentRegisterPageState extends State<_StudentRegisterPage> {
                     ),
                     const SizedBox(height: 16),
                     SwitchListTile(
-                      title: const Text('Possui deficiência?'),
+                      title: const Text(
+                        'Possui deficiência?',
+                        style: TextStyle(color: ThemeHelper.kWhite),
+                      ),
                       value: hasDisability,
                       onChanged: (value) => setState(() {
                         hasDisability = value;
@@ -172,13 +193,14 @@ class _StudentRegisterPageState extends State<_StudentRegisterPage> {
                         ),
                       ),
                     SwitchListTile(
-                      title: const Text('Necessita de recursos de apoio?'),
+                      title: const Text(
+                        'Necessita de recursos de apoio?',
+                        style: TextStyle(color: ThemeHelper.kWhite),
+                      ),
                       value: needsSupportResources,
                       onChanged: (value) => setState(() {
                         needsSupportResources = value;
-                        if (!value) {
-                          supportResourcesController.clear();
-                        }
+                        if (!value) supportResourcesController.clear();
                       }),
                     ),
                     if (needsSupportResources)

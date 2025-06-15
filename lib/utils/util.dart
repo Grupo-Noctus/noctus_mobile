@@ -1,11 +1,9 @@
 final class Util {
-  /// #region Config
   static const String extensionPNG = 'png';
   static const String extensionJPG = 'jpg';
   static const String extensionPDF = 'pdf';
   static const String directoryMedia = 'media';
 
-  /// #region Internationalization
   static const String kLanguageCode = 'pt';
   static const String kCountryCode = 'BR';
   static const String kLocaleId = '${kLanguageCode}_$kCountryCode';

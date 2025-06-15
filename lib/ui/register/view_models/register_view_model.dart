@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctus_mobile/configs/factory_viewmodel.dart';
-import 'package:noctus_mobile/core/enum/gender_enum.dart';
 import 'package:noctus_mobile/core/widgets/show_dialog_widget.dart';
 import 'package:noctus_mobile/data/repositories/register/register_repository.dart';
 import 'package:noctus_mobile/domain/entities/core/request_state_entity.dart';

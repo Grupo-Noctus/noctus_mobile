@@ -10,7 +10,6 @@ import 'package:noctus_mobile/ui/register/view_models/register_view_model.dart';
 import 'package:noctus_mobile/ui/register/widgets/register_avatar_widget.dart';
 import 'package:noctus_mobile/ui/register/widgets/register_button_widget.dart';
 import 'package:noctus_mobile/ui/register/widgets/register_form_input_widiget.dart';
-
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
 
@@ -22,14 +21,12 @@ class RegisterPage extends StatelessWidget {
     );
   }
 }
-
 class _RegisterPage extends StatefulWidget {
   const _RegisterPage();
 
   @override
   State<_RegisterPage> createState() => _RegisterPageState();
 }
-
 class _RegisterPageState extends State<_RegisterPage> {
   final _formKey = GlobalKey<FormState>();
 
@@ -100,8 +97,6 @@ class _RegisterPageState extends State<_RegisterPage> {
                     onImageSelected: controller.setImage,
                   ),
                   const SizedBox(height: 24),
-
-                  // 2. Envolvendo inputs no Form com a key:
                   Form(
                     key: _formKey,
                     child: RegisterFormInputWidget(
@@ -112,7 +107,6 @@ class _RegisterPageState extends State<_RegisterPage> {
                       phoneController: phoneController,
                     ),
                   ),
-
                   const SizedBox(height: 24),
                   RegisterButtonWidget(
                     onPressed: () {
@@ -128,7 +122,6 @@ class _RegisterPageState extends State<_RegisterPage> {
     );
   }
 
-  // 3. Chamar validate antes de enviar
   void onRegister() {
     if (_formKey.currentState?.validate() ?? false) {
       final controller = context.read<RegisterViewModel>();

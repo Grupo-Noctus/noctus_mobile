@@ -1,8 +1,10 @@
-enum Gender {
-  male('MALE', 'Male'),
-  female('FEMALE', 'Female'),
-  nonBinary('NON_BINARY', 'Non-binary'),
-  preferNotToSay('PREFER_NOT_TO_SAY', 'Prefer not to say');
+import 'package:noctus_mobile/core/library/extensions.dart';
+
+enum Gender implements LabeledEnum {
+  male('MALE', 'Masculino'),
+  female('FEMALE', 'Feminino'),
+  nonBinary('NON_BINARY', 'Não binário'),
+  preferNotToSay('PREFER_NOT_TO_SAY', 'Prefiro não informar');
 
   final String value;
   final String label;

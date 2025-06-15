@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:noctus_mobile/core/service/app_service.dart';
-import 'package:noctus_mobile/data/repositories/register/register_repository.dart';
 import 'package:noctus_mobile/domain/entities/register/register_entity.dart';
 import 'package:noctus_mobile/ui/register/pages/register_page.dart';
 import 'package:noctus_mobile/configs/injection_container.dart';

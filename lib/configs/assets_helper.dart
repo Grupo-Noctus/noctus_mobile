@@ -1,7 +1,9 @@
-// incluir caminho das imagens
-// ex (pasta): static final String _assetsLogin = [_kAssetsDirectoryName, 'login'].joinPath;
-// ex (imagem): static final String assetsLoginIcon = [_assetsLogin, 'login_icon.png'].joinPath;
+import 'package:noctus_mobile/core/library/extensions.dart';
 
 const String _kAssetsDirectoryName = 'assets';
 
-final class AssetsHelper {}
+final class AssetsHelper {
+  static final String _assetsAplication = [_kAssetsDirectoryName,  'aplication'].joinPath;
+
+  static final String assetsM = [_assetsAplication, 'm_matera.png'].joinPath;
+}

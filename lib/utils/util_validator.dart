@@ -23,7 +23,7 @@ final class UtilValidator {
 
   static bool isValidUsername(String username) {
     if (username.trim().isEmpty) return false;
-    const String regex = r'^[a-zA-Z0-9._]{3,}$';
+    const String regex = r'^[a-za-z0-9._]{3,}$';
     return _hasMatch(username, regex);
   }
 

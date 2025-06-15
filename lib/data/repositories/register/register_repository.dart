@@ -19,10 +19,9 @@ final class RegisterRepository implements IRegisterRepository {
     );
 
     if (response != null && response.data != null) {
-      if (response.data is bool) {
-        return response.data == true;
-      } else if (response.data is Map<String, dynamic>) {
-        return response.data['success'] == true;
+      final data = response.data;
+      if (data is String) {
+        return data.toLowerCase() == 'true';
       }
     }
 

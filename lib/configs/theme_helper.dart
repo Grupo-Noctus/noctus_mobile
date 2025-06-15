@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 final class ThemeHelper {
-  // Cores
   static const Color kTransparenteColor = Colors.transparent;
   static const Color kPrimaryBlue = Color(0xFF461CDC);
   static const Color kAccentGreen = Color(0xFF6BFF50);
@@ -10,7 +9,6 @@ final class ThemeHelper {
   static const Color kLightGray = Color(0xFFF2F2F2);
   static const Color kMediumGray = Color(0xFFBFBFBF);
 
-  // Estilos de texto
   static const TextStyle buttonTextStyle = TextStyle(
     color: kAccentGreen,
     fontWeight: FontWeight.bold,
@@ -25,7 +23,7 @@ final class ThemeHelper {
   static ThemeData get theme {
     return ThemeData(
       primaryColor: kPrimaryBlue,
-      scaffoldBackgroundColor: kWhite,
+      scaffoldBackgroundColor: kPrimaryBlue,
       fontFamily: 'Open Sans',
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -40,18 +38,75 @@ final class ThemeHelper {
       ),
       inputDecorationTheme: const InputDecorationTheme(
         filled: true,
-        fillColor: kWhite,
+        fillColor: kDarkBlack,
         iconColor: kPrimaryBlue,
         prefixIconColor: kPrimaryBlue,
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
-        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30)),
           borderSide: BorderSide.none,
         ),
-        labelStyle: inputTextStyle, // aplica o estilo do texto do input
+        labelStyle: TextStyle(
+          color: kMediumGray,
+          fontFamily: 'Open Sans',
+        ),
+      ),
+    );
+  }
+
+  static InputDecoration buildInputDecoration({
+    required String labelText,
+    String? hintText,
+  }) {
+    return InputDecoration(
+      labelText: labelText,
+      hintText: hintText,
+      filled: true,
+      fillColor: kDarkBlack,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      labelStyle: const TextStyle(
+        color: kMediumGray,
+        fontFamily: 'Open Sans',
+      ),
+      hintStyle: const TextStyle(
+        color: kMediumGray,
+        fontFamily: 'Open Sans',
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(
+          color: kMediumGray,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(
+          color: kAccentGreen,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(
+          color: kAccentGreen,
+          width: 2,
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(
+          color: kMediumGray,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(
+          color: kAccentGreen,
+          width: 2,
+        ),
+      ),
+      errorStyle: const TextStyle(
+        color: kAccentGreen,
+        fontWeight: FontWeight.w500,
       ),
     );
   }

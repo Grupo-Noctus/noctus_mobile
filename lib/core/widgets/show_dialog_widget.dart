@@ -1,19 +1,23 @@
 import 'package:noctus_mobile/configs/factory_viewmodel.dart';
+import 'package:noctus_mobile/configs/theme_helper.dart';
 
 void showSnackBar(
   String msg, {
-  Color? colorBackground,
-  Duration duration = const Duration(seconds: 5),
+  Duration duration = const Duration(seconds: 7),
   void Function()? onListen,
 }) {
   final BuildContext context = getIt<IAppService>().context!;
   final SnackBar snackBar = SnackBar(
     duration: duration,
-    backgroundColor: colorBackground,
+    backgroundColor: ThemeHelper.kDarkBlack,
     margin: const EdgeInsets.all(34),
     behavior: SnackBarBehavior.floating,
     content: Text(
       msg,
+      style: const TextStyle(
+        color: ThemeHelper.kAccentGreen, // ou qualquer cor que combine com o fundo
+        fontWeight: FontWeight.w500,
+      ),
     ),
   );
   try {

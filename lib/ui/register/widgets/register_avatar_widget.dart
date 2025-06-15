@@ -48,7 +48,7 @@ class _RegisterAvatarWidgetState extends State<RegisterAvatarWidget> {
         const SizedBox(height: 8),
         const Text(
           'Toque para selecionar uma foto',
-          style: TextStyle(color: ThemeHelper.kWhite),
+          style: TextStyle(color: ThemeHelper.kDarkBlack),
         ),
       ],
     );

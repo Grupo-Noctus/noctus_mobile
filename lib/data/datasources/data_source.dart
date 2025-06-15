@@ -1,6 +1,3 @@
-
-
-import 'package:dio/dio.dart';
 import 'package:noctus_mobile/configs/factory_viewmodel.dart';
 import 'package:noctus_mobile/domain/entities/core/http_response_entity.dart';
 

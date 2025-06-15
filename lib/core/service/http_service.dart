@@ -39,7 +39,14 @@ final class HttpService implements IHttpService {
   Future<HttpResponseEntity> post(String url, {int? secondsTimeout, dynamic data}) async {
     try {
       await _changeDioOptionsAsync();
-      final Response response = await _dio.post(url, data: data);
+      Options? options;
+
+      if (data is FormData) {
+        options = Options(contentType: null);
+      } else {
+        options = Options(contentType: Headers.jsonContentType);
+      }
+      final Response response = await _dio.post(url, data: data, options: options);
       return _createHttpResponseFromResponse(response);
     } catch (error) {
       throw error.convertDioToHttpException();

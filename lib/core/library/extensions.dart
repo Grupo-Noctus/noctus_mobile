@@ -1,4 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:noctus_mobile/core/enum/brasilian_state_enum.dart';
+import 'package:noctus_mobile/core/enum/education_level_enum.dart';
+import 'package:noctus_mobile/core/enum/ethnicity_enum.dart';
+import 'package:noctus_mobile/core/enum/gender_enum.dart';
 import 'package:noctus_mobile/domain/entities/core/http_response_entity.dart';
 import 'package:noctus_mobile/domain/error/core/http_exception.dart';
 import 'package:noctus_mobile/core/library/constants.dart';
@@ -195,5 +199,15 @@ extension ParsingObjectList on List<Object> {
       separator = ',';
     }
     return joinForSqlIn;
+  }
+}
+
+extension EnumLabel<T extends Enum> on T {
+  String get label {
+    if (this is EducationLevel) return (this as EducationLevel).label;
+    if (this is BrazilianState) return (this as BrazilianState).label;
+    if (this is Ethnicity) return (this as Ethnicity).label;
+    if (this is Gender) return (this as Gender).label;
+    return toString();
   }
 }

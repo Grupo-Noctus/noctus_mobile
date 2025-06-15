@@ -1,57 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:noctus_mobile/controllers/couses_controller.dart';
-import 'package:noctus_mobile/service/course_service.dart';
-import 'package:provider/provider.dart';
-import 'package:noctus_mobile/providers/auth_provider.dart';
-import 'package:noctus_mobile/service/auth_service.dart';
-import 'package:noctus_mobile/utils/app_colors.dart';
-import 'package:noctus_mobile/views/home_view.dart';
-import 'package:noctus_mobile/views/login_view.dart';
-import 'package:flutter_localizations/flutter_localizations.dart'; 
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:noctus_mobile/configs/injection_container.dart' as injector;
+import 'package:noctus_mobile/configs/theme_helper.dart';
+import 'package:noctus_mobile/core/service/app_service.dart';
+import 'package:noctus_mobile/routing/route_generator.dart';
+import 'package:noctus_mobile/utils/util.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  final authProvider = AuthProvider(AuthService());
-  await authProvider.loadToken();
-
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
-        ChangeNotifierProvider<CourseController>(create: (_) => CourseController(CourseService())),
-      ],
-      child: const Noctus(),
-    ),
-  );
+  _ConfigureModeUi.apply();
+  await injector.init();
+  runApp(const MainApp());
 }
-class Noctus extends StatelessWidget {const Noctus({super.key});
+
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    final isLoggedIn = authProvider.isLoggedIn;
     return MaterialApp(
+      theme: ThemeHelper.theme,
       debugShowCheckedModeBanner: false,
-      title: 'Noctus',
-      theme: ThemeData(
-        scaffoldBackgroundColor: AppColors.primaryBlue,
-      ),
-
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale('pt', 'BR'),
-      ],
-      initialRoute: isLoggedIn ? '/home' : '/login',
-      routes: {
-        '/login': (context) => const LoginView(),
-        '/home': (context) => const HomeView(), // trocar pra view cursos
-        // adicione as novas rotas (views) 
-      },
+      supportedLocales: const [Locale(Util.kLanguageCode, Util.kCountryCode)],
+      onGenerateRoute: RouteGeneratorHelper.generateRoute,
+      navigatorKey: injector.getIt<IAppService>().navigatorKey,
+    );
+  }
+}
+
+final class _ConfigureModeUi {
+  static void apply() {
+    WidgetsFlutterBinding.ensureInitialized();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: ThemeHelper.kTransparenteColor,
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
+      ),
     );
   }
 }

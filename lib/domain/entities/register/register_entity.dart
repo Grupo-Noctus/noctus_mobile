@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
@@ -35,5 +36,16 @@ final class RegisterEntity {
       );
     }
     return FormData.fromMap(map);
+  }
+  RegisterEntity copyWith({
+    UserRegisterEntity? user,
+    StudentEntity? student,
+    String? imageUser,
+  }) {
+    return RegisterEntity(
+      user: user ?? this.user,
+      student: student ?? this.student,
+      imageUser: imageUser ?? this.imageUser,
+    );
   }
 }

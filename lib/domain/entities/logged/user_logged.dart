@@ -2,7 +2,7 @@ final class UserLoggedEntity {
   final int id;
   final String name;
   final String username;
-  final String image;
+  final String? image;
   final String role;
   final bool active;
 
@@ -27,7 +27,7 @@ final class UserLoggedEntity {
       id: map['sub'] as int,
       name: map['name'] as String,
       username: map['username'] as String,
-      image: map['image'] as String,
+      image: map['image'] as String?,
       role: map['role'] as String,
       active: map['active'] as bool,
     );
@@ -38,7 +38,7 @@ final class UserLoggedEntity {
       id: map[kKeyId] as int,
       name: map[kKeyName] as String,
       username: map[kKeyUsername] as String,
-      image: map[kKeyImage] as String,
+      image: map[kKeyImage] as String?,
       role: map[kKeyRole] as String,
       active: (map[kKeyActive] as int) == 1,
     );

@@ -90,11 +90,22 @@ extension DateTimeExtension on DateTime {
 
 extension HttpResponseExtension on HttpResponseEntity? {
   bool toBool() {
-    const String success = 'success';
-    final bool successHttp = (this?.statusCode ?? 0) >= HttpConstant.kSuccess && (this?.statusCode ?? 0) <= HttpConstant.kSuccessLimit;
-    final Map? data = this?.data != null && this!.data is Map && this!.data.containsKey(success) ? this!.data : null;
-    return data?[success] ?? successHttp;
+    const successKey = 'success';
+
+    final statusCode = this?.statusCode ?? 0;
+    final bool successHttp = statusCode >= 200 && statusCode < 300;
+
+    final responseData = this?.data;
+    if (responseData is Map) {
+      final value = responseData[successKey];
+      if (value is bool) return value;
+      if (value is String) return value.toLowerCase() == 'true';
+      if (value is num) return value != 0;
+    }
+
+    return successHttp;
   }
+
 
   bool toStatusNoContent() {
     return (this?.statusCode ?? 0) == HttpConstant.kSuccessNoContent;

@@ -11,5 +11,4 @@ final class UtilText {
   static const String labelInvalidEmail = 'Informe um email válido!';
   static const String labelInvalidPassword = 'Informe uma senha válida com no mímino 6 caracteres!';
   static const String labelInvalidPhoneNumber = 'Informe um número de telefone válido!';
-
 }

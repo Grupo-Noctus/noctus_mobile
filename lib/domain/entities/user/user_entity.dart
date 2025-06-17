@@ -24,12 +24,12 @@ final class UserRegisterEntity {
   }
 
   Map<String, dynamic> toMap() => {
-        kKeyUsername: username,
-        kKeyName: name,
-        kKeyEmail: email,
-        kKeyPassword: password,
-        kKeyPhoneNumber: phoneNumber,
-      };
+    kKeyUsername: username,
+    kKeyName: name,
+    kKeyEmail: email,
+    kKeyPassword: password,
+    kKeyPhoneNumber: phoneNumber,
+  };
 
   static const String kKeyUsername = 'username';
   static const String kKeyName = 'name';

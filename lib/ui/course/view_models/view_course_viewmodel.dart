@@ -1,44 +1,42 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
 import 'package:noctus_mobile/configs/data_base_schema_helper.dart';
 import 'package:noctus_mobile/configs/factory_viewmodel.dart';
 import 'package:noctus_mobile/domain/entities/course/enrolled_course_entity.dart';
 import 'package:noctus_mobile/domain/entities/module/module_entity.dart';
 import 'package:noctus_mobile/domain/entities/video/video_entity.dart';
+import 'package:noctus_mobile/ui/course/view_models/view_course_state.dart';
 
-class ViewCourseViewModel extends ChangeNotifier {
-  late VideoPlayerController _videoController;
-  bool _initialized = false;
-  bool _hasError = false;
-  String? _errorMessage;
-  late EnrolledCourseEntity _course;
-  ModuleEntity? _selectedModule;
-  VideoEntity? _selectedVideo;
+/// ViewModel responsável por gerenciar o estado e a lógica da visualização de um curso
+/// Utiliza o padrão Cubit para gerenciamento de estado
+class ViewCourseViewModel extends Cubit<ViewCourseState> {
   final INonRelationalDataSource _localStorage;
+  VideoPlayerController? _videoController;
 
-  ViewCourseViewModel(this._localStorage);
+  /// Construtor que inicializa o ViewModel com estado padrão
+  ViewCourseViewModel(this._localStorage) : super(const ViewCourseState());
 
-  bool get initialized => _initialized;
-  bool get hasError => _hasError;
-  String? get errorMessage => _errorMessage;
-  VideoPlayerController get videoController => _videoController;
-  EnrolledCourseEntity get course => _course;
-  List<ModuleEntity> get modules => _course.modules;
-  ModuleEntity? get selectedModule => _selectedModule;
-  VideoEntity? get selectedVideo => _selectedVideo;
+  /// Retorna a lista de módulos do curso atual
+  List<ModuleEntity> get modules => state.course?.modules ?? [];
 
+  /// Define o curso a ser visualizado e inicializa o primeiro módulo e vídeo
   void setCourse(EnrolledCourseEntity course) {
-    _course = course;
+    emit(state.copyWith(course: course));
+
     if (course.modules.isNotEmpty) {
-      _selectedModule = course.modules.first;
-      if (_selectedModule!.videos.isNotEmpty) {
-        _initializeFirstVideo(_selectedModule!.videos.first);
+      final firstModule = course.modules.first;
+      emit(state.copyWith(selectedModule: firstModule));
+
+      if (firstModule.videos.isNotEmpty) {
+        _initializeFirstVideo(firstModule.videos.first);
       }
     }
   }
 
+  /// Inicializa o primeiro vídeo do módulo
   void _initializeFirstVideo(VideoEntity video) async {
-    _selectedVideo = video;
+    emit(state.copyWith(selectedVideo: video));
+
     final videoUrl = video.url;
     if (videoUrl.isNotEmpty) {
       await initializeVideo(videoUrl);
@@ -47,17 +45,16 @@ class ViewCourseViewModel extends ChangeNotifier {
     }
   }
 
+  /// Alterna a seleção de um módulo (expande/colapsa)
   void toggleModule(ModuleEntity module) {
-    if (_selectedModule == module) {
-      _selectedModule = null;
-    } else {
-      _selectedModule = module;
-    }
-    notifyListeners();
+    final newSelectedModule = state.selectedModule == module ? null : module;
+    emit(state.copyWith(selectedModule: newSelectedModule));
   }
 
+  /// Seleciona um vídeo para reprodução
   Future<void> selectVideo(VideoEntity video) async {
-    _selectedVideo = video;
+    emit(state.copyWith(selectedVideo: video));
+
     final videoUrl = video.url;
     if (videoUrl.isNotEmpty) {
       await initializeVideo(videoUrl);
@@ -66,19 +63,23 @@ class ViewCourseViewModel extends ChangeNotifier {
     }
   }
 
+  /// Inicializa o player de vídeo com a URL fornecida
   Future<void> initializeVideo(String url) async {
     _clearError();
-    if (_initialized) {
-      await _videoController.dispose();
-      _initialized = false;
+
+    if (state.initialized && _videoController != null) {
+      await _videoController!.dispose();
+      emit(state.copyWith(initialized: false));
     }
 
     try {
       _videoController = VideoPlayerController.network(url);
-      await _videoController.initialize();
-      _videoController.play();
-      _initialized = true;
-      notifyListeners();
+      await _videoController!.initialize();
+      _videoController!.play();
+
+      emit(
+        state.copyWith(initialized: true, videoController: _videoController),
+      );
     } catch (e) {
       _setError(
         'Erro ao carregar o vídeo. Verifique sua conexão e tente novamente.',
@@ -86,38 +87,42 @@ class ViewCourseViewModel extends ChangeNotifier {
     }
   }
 
+  /// Define um estado de erro
   void _setError(String message) {
-    _hasError = true;
-    _errorMessage = message;
-    _initialized = false;
-    notifyListeners();
+    emit(
+      state.copyWith(hasError: true, errorMessage: message, initialized: false),
+    );
   }
 
+  /// Limpa o estado de erro
   void _clearError() {
-    _hasError = false;
-    _errorMessage = null;
-    notifyListeners();
+    emit(state.copyWith(hasError: false, errorMessage: null));
   }
 
+  /// Alterna entre play/pause do vídeo atual
   void togglePlayPause() {
-    if (_videoController.value.isPlaying) {
-      _videoController.pause();
+    if (_videoController == null) return;
+
+    if (_videoController!.value.isPlaying) {
+      _videoController!.pause();
     } else {
-      _videoController.play();
+      _videoController!.play();
     }
-    notifyListeners();
+    emit(state); // Notifica mudança de estado do player
   }
 
+  /// Realiza o logout do usuário
   Future<void> logout() async {
     await _localStorage.remove(DataBaseNoSqlSchemaHelper.kUserToken);
     await _localStorage.remove(DataBaseNoSqlSchemaHelper.kUserLogged);
   }
 
+  /// Limpa os recursos ao fechar o ViewModel
   @override
-  void dispose() {
-    if (_initialized) {
-      _videoController.dispose();
+  Future<void> close() async {
+    if (state.initialized && _videoController != null) {
+      await _videoController!.dispose();
     }
-    super.dispose();
+    return super.close();
   }
 }

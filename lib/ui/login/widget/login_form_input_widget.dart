@@ -9,7 +9,7 @@ class LoginFormInputWidget extends StatefulWidget {
   final TextEditingController passwordController;
 
   const LoginFormInputWidget({
-    Key? key,
+    super.key,
     required this.emailController,
     required this.passwordController,
   });
@@ -30,7 +30,7 @@ class _LoginFormInputWidgetState extends State<LoginFormInputWidget>{
             AppInputFormFieldWidget(
               controller: widget.emailController,
               labelText: 'Email',
-              validatorMessage: 'O email é obrigatório.',
+              validatorMessage: 'Insira seu email.',
               enabled: !isProcessing,
               textInputAction: TextInputAction.next,
               hintText: 'Insira seu email.',

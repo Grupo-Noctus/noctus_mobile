@@ -5,6 +5,7 @@ import 'package:noctus_mobile/configs/factory_viewmodel.dart';
 import 'package:noctus_mobile/core/library/extensions.dart';
 import 'package:noctus_mobile/domain/entities/core/http_response_entity.dart';
 import 'package:noctus_mobile/domain/entities/logged/logged_entity.dart';
+import 'package:noctus_mobile/domain/entities/logged/user_logged.dart';
 import 'package:noctus_mobile/domain/entities/login/login_entity.dart';
 
 abstract interface class ILoginRepository {
@@ -34,8 +35,13 @@ final class LoginRepository implements ILoginRepository {
         data.containsKey('access_token') &&
         data['access_token'] is String &&
         data.containsKey('payload')) {
-      await _saveTokenAsync(data['access_token']);
-      return LoggedEntity.fromMap(data);
+      
+      final logged = LoggedEntity.fromMap(data);
+
+      await _saveTokenAsync(logged.accessToken);
+      await _saveUserLoggedAsync(logged.user);
+
+      return logged;
     }
 
     return null;
@@ -45,6 +51,14 @@ final class LoginRepository implements ILoginRepository {
     return _nonRelationalDataSource.saveString(
       DataBaseNoSqlSchemaHelper.kUserToken,
       token,
+    )!;
+  }
+
+  Future<bool> _saveUserLoggedAsync(UserLoggedEntity user) {
+    final String jsonUser = jsonEncode(user.toMap());
+    return _nonRelationalDataSource.saveString(
+      DataBaseNoSqlSchemaHelper.kUserLogged,
+      jsonUser,
     )!;
   }
 

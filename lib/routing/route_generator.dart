@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctus_mobile/core/service/app_service.dart';
 import 'package:noctus_mobile/domain/entities/register/register_entity.dart';
-import 'package:noctus_mobile/ui/home/pages/home_page.dart';
+import 'package:noctus_mobile/ui/home/pages/admin_home_page.dart';
+import 'package:noctus_mobile/ui/home/pages/student_home_page.dart';
+import 'package:noctus_mobile/ui/home/view_models/admin/admin_home_factory_viewmodel.dart';
+import 'package:noctus_mobile/ui/home/view_models/admin/admin_home_view_model.dart';
+import 'package:noctus_mobile/ui/home/view_models/student_home_factory_viewmodel.dart';
+import 'package:noctus_mobile/ui/home/view_models/student_home_view_model.dart';
 import 'package:noctus_mobile/ui/login/pages/login_page.dart';
 import 'package:noctus_mobile/ui/redirect/pages/splash_page.dart';
 import 'package:noctus_mobile/ui/register/pages/register_page.dart';
@@ -13,7 +19,8 @@ final class RouteGeneratorHelper {
   static const String kLogin = '/login';
   static const String kRegister = '/register';
   static const String kStudentRegister = '/student';
-  static const String kHome = '/home';
+  static const String kAdminHome = '/admin-home';
+  static const String kStudentHome = '/student-home';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final Object? args = settings.arguments;
@@ -29,7 +36,28 @@ final class RouteGeneratorHelper {
           ),
         )
       : createRouteError(),
-      kHome => createRoutePage(const HomePage()),
+      kAdminHome => createRoutePage(
+        BlocProvider<AdminCoursesViewModel>(
+          create: (context) {
+            final factory = AdminCoursesFactoryViewModel();
+            final vm = factory.create(context);
+            vm.loadCourses();
+            return vm;
+          },
+          child: const AdminCoursesPage(),
+        ),
+      ),
+      kStudentHome => createRoutePage(
+        BlocProvider<StudentCoursesViewModel>(
+          create: (context) {
+            final factory = StudentCoursesFactoryViewModel();
+            final vm = factory.create(context);
+            vm.loadCourses();
+            return vm;
+          },
+          child: const StudentHomePage(),
+        ),
+      ),
       _ => createRouteError(),
     };
   }

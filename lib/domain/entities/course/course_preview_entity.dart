@@ -41,9 +41,12 @@ final class CoursePreviewEntity {
       description: map[kKeyDescription] as String,
       image: map[kKeyImage] as String,
       duration: map[kKeyDuration] as int,
-      modules: (map[kKeyModules] as List<dynamic>)
-          .map((e) => ModulePreviewEntity.fromMap(e as Map<String, dynamic>))
-          .toList(),
+      modules:
+          (map[kKeyModules] as List<dynamic>)
+              .map(
+                (e) => ModulePreviewEntity.fromMap(e as Map<String, dynamic>),
+              )
+              .toList(),
       countModules: map[kKeyCountModules] as int,
       countVideos: map[kKeyCountVideos] as int,
       durationVideos: map[kKeyDurationVideos] as int,
@@ -64,7 +67,7 @@ final class CoursePreviewEntity {
     };
   }
 
-    String get imageUrl {
+  String get imageUrl {
     const env = EnvironmentHelper();
     return '${env.urlUploadBase}$image';
   }

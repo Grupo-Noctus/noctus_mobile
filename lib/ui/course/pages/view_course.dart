@@ -13,7 +13,7 @@ class ViewCourseView extends StatelessWidget {
     final viewModel = Provider.of<ViewCourseViewModel>(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF461CDC), // Roxo escuro
+      backgroundColor: ThemeHelper.kPrimaryBlue,
       body: Column(
         children: [
           HeaderWidget(
@@ -22,7 +22,6 @@ class ViewCourseView extends StatelessWidget {
               Navigator.of(context).pushReplacementNamed('/login');
             },
           ),
-          // Back Button Section
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             alignment: Alignment.centerLeft,
@@ -41,9 +40,8 @@ class ViewCourseView extends StatelessWidget {
               ),
             ),
           ),
-          // Video Player Section
           Container(
-            color: Colors.black,
+            color: ThemeHelper.kDarkBlack,
             child: AspectRatio(
               aspectRatio: 16 / 9,
               child:
@@ -58,33 +56,32 @@ class ViewCourseView extends StatelessWidget {
                               viewModel.videoController.value.isPlaying
                                   ? Icons.pause_circle
                                   : Icons.play_circle,
-                              color: Colors.white,
+                              color: ThemeHelper.kWhite,
                             ),
                             onPressed: viewModel.togglePlayPause,
                           ),
                         ],
                       )
                       : const Center(
-                        child: CircularProgressIndicator(color: Colors.white),
+                        child: CircularProgressIndicator(
+                          color: ThemeHelper.kWhite,
+                        ),
                       ),
             ),
           ),
-
-          // Course Content Section
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                // Current Video Info
                 if (viewModel.selectedVideo != null) ...[
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: ThemeHelper.kWhite,
                       borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: ThemeHelper.kDarkBlack.withOpacity(0.1),
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),
@@ -98,7 +95,7 @@ class ViewCourseView extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF333333), // Cinza escuro
+                            color: ThemeHelper.kDarkBlack,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -106,7 +103,7 @@ class ViewCourseView extends StatelessWidget {
                           viewModel.selectedVideo!.description,
                           style: const TextStyle(
                             fontSize: 14,
-                            color: Color(0xFF666666), // Cinza médio
+                            color: ThemeHelper.kMediumGray,
                           ),
                         ),
                       ],
@@ -114,15 +111,12 @@ class ViewCourseView extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                 ],
-
-                // Modules List
                 ...viewModel.modules.map((module) {
                   final isSelected = module == viewModel.selectedModule;
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Module Header
                       InkWell(
                         onTap: () => viewModel.toggleModule(module),
                         child: Container(
@@ -130,8 +124,8 @@ class ViewCourseView extends StatelessWidget {
                           decoration: BoxDecoration(
                             color:
                                 isSelected
-                                    ? Colors.green.withOpacity(0.2)
-                                    : Colors.black.withOpacity(0.3),
+                                    ? ThemeHelper.kAccentGreen.withOpacity(0.2)
+                                    : ThemeHelper.kDarkBlack.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -140,7 +134,7 @@ class ViewCourseView extends StatelessWidget {
                                 isSelected
                                     ? Icons.keyboard_arrow_down
                                     : Icons.keyboard_arrow_right,
-                                color: Colors.green,
+                                color: ThemeHelper.kAccentGreen,
                               ),
                               const SizedBox(width: 8),
                               Expanded(
@@ -149,7 +143,7 @@ class ViewCourseView extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: ThemeHelper.kWhite,
                                   ),
                                 ),
                               ),
@@ -157,8 +151,6 @@ class ViewCourseView extends StatelessWidget {
                           ),
                         ),
                       ),
-
-                      // Videos List (only show if module is selected)
                       if (isSelected) ...[
                         ...module.videos.map((video) {
                           final isCurrentVideo =
@@ -170,16 +162,16 @@ class ViewCourseView extends StatelessWidget {
                                 Icons.play_circle_outline,
                                 color:
                                     isCurrentVideo
-                                        ? Colors.green
-                                        : Colors.white70,
+                                        ? ThemeHelper.kAccentGreen
+                                        : ThemeHelper.kWhite,
                               ),
                               title: Text(
                                 video.name,
                                 style: TextStyle(
                                   color:
                                       isCurrentVideo
-                                          ? Colors.green
-                                          : Colors.white,
+                                          ? ThemeHelper.kAccentGreen
+                                          : ThemeHelper.kWhite,
                                   fontWeight:
                                       isCurrentVideo
                                           ? FontWeight.bold
@@ -190,7 +182,9 @@ class ViewCourseView extends StatelessWidget {
                                 video.description,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(color: Colors.white70),
+                                style: const TextStyle(
+                                  color: ThemeHelper.kMediumGray,
+                                ),
                               ),
                               onTap: () => viewModel.selectVideo(video),
                             ),

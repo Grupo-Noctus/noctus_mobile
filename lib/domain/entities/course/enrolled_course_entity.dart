@@ -41,4 +41,8 @@ final class EnrolledCourseEntity {
     const env = EnvironmentHelper();
     return '${env.urlUploadBase}$courseImage';
   }
+
+  factory EnrolledCourseEntity.fromRemoteMap(Map<String, dynamic> map) {
+    return EnrolledCourseEntity.fromMap(map);
+  }
 }

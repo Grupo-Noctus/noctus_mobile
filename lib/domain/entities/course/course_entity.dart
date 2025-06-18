@@ -38,19 +38,12 @@ final class CourseEntity {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      kKeyId: id,
-      kKeyName: name,
-      kKeyDescription: description,
-      kKeyImage: image,
-      kKeyDuration: duration,
-      kKeyModules: modules.map((e) => e.toMap()).toList(),
-    };
-  }
-
   String get imageUrl {
     const env = EnvironmentHelper();
     return '${env.urlUploadBase}$image';
+  }
+
+  factory CourseEntity.fromRemoteMap(Map<String, dynamic> map) {
+    return CourseEntity.fromMap(map);
   }
 }

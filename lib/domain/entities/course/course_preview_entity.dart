@@ -68,4 +68,8 @@ final class CoursePreviewEntity {
     const env = EnvironmentHelper();
     return '${env.urlUploadBase}$image';
   }
+
+  factory CoursePreviewEntity.fromRemoteMap(Map<String, dynamic> map) {
+    return CoursePreviewEntity.fromMap(map);
+  }
 }

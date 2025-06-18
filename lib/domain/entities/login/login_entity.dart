@@ -22,4 +22,8 @@ final class LoginEntity {
 
   static const String kKeyUsernameOrEmail = 'usernameOrEmail';
   static const String kKeyPassword = 'password';
+
+  factory LoginEntity.fromRemoteMap(Map<String, dynamic> map) {
+    return LoginEntity.fromMap(map);
+  }
 }

@@ -15,4 +15,8 @@ final class LoggedEntity {
       user: UserLoggedEntity.fromApiMap(map['payload'] as Map<String, dynamic>),
     );
   }
+
+  factory LoggedEntity.fromRemoteMap(Map<String, dynamic> map) {
+    return LoggedEntity.fromMap(map);
+  }
 }

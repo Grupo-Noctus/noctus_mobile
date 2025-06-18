@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart';
+import 'package:noctus_mobile/configs/factory_viewmodel.dart';
+
 final class VideoEntity {
   final int id;
   final String name;
@@ -52,5 +55,9 @@ final class VideoEntity {
     };
   }
 
-  String get url => videoUrl ?? defaultVideoUrl;
+  String get url {
+    if (videoUrl == null || videoUrl!.isEmpty) return '';
+    const env = EnvironmentHelper();
+    return '${env.urlUploadVideo}$videoUrl';
+  }
 }

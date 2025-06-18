@@ -1,4 +1,3 @@
-// domain/entities/course/course_entity.dart
 import 'package:noctus_mobile/configs/factory_viewmodel.dart';
 import 'package:noctus_mobile/domain/entities/module/module_entity.dart';
 
@@ -33,9 +32,10 @@ final class CourseEntity {
       description: map[kKeyDescription] as String,
       image: map[kKeyImage] as String,
       duration: map[kKeyDuration] as int,
-      modules: (map[kKeyModules] as List<dynamic>)
-          .map((e) => ModuleEntity.fromMap(e as Map<String, dynamic>))
-          .toList(),
+      modules:
+          (map[kKeyModules] as List<dynamic>)
+              .map((e) => ModuleEntity.fromMap(e as Map<String, dynamic>))
+              .toList(),
     );
   }
 
@@ -55,8 +55,7 @@ final class CourseEntity {
     return '${env.urlUploadBase}$image';
   }
 
-factory CourseEntity.fromRemoteMap(Map<String, dynamic> map) {
+  factory CourseEntity.fromRemoteMap(Map<String, dynamic> map) {
     return CourseEntity.fromMap(map);
   }
 }
-

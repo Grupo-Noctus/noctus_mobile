@@ -44,29 +44,82 @@ class ViewCourseView extends StatelessWidget {
             color: ThemeHelper.kDarkBlack,
             child: AspectRatio(
               aspectRatio: 16 / 9,
-              child:
-                  viewModel.initialized
-                      ? Stack(
-                        alignment: Alignment.center,
+              child: Builder(
+                builder: (context) {
+                  if (!viewModel.initialized) {
+                    if (viewModel.selectedVideo == null) {
+                      return const Center(
+                        child: Text(
+                          'Nenhum vídeo selecionado',
+                          style: TextStyle(color: ThemeHelper.kWhite),
+                        ),
+                      );
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: ThemeHelper.kWhite,
+                      ),
+                    );
+                  }
+
+                  if (viewModel.hasError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          VideoPlayer(viewModel.videoController),
-                          IconButton(
-                            iconSize: 64,
-                            icon: Icon(
-                              viewModel.videoController.value.isPlaying
-                                  ? Icons.pause_circle
-                                  : Icons.play_circle,
-                              color: ThemeHelper.kWhite,
+                          const Icon(
+                            Icons.error_outline,
+                            color: ThemeHelper.kWhite,
+                            size: 48,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            viewModel.errorMessage ??
+                                'Erro ao carregar o vídeo',
+                            style: const TextStyle(color: ThemeHelper.kWhite),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          TextButton.icon(
+                            onPressed: () {
+                              if (viewModel.selectedVideo?.videoUrl != null) {
+                                viewModel.initializeVideo(
+                                  viewModel.selectedVideo!.videoUrl!,
+                                );
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.refresh,
+                              color: ThemeHelper.kAccentGreen,
                             ),
-                            onPressed: viewModel.togglePlayPause,
+                            label: const Text(
+                              'Tentar Novamente',
+                              style: TextStyle(color: ThemeHelper.kAccentGreen),
+                            ),
                           ),
                         ],
-                      )
-                      : const Center(
-                        child: CircularProgressIndicator(
+                      ),
+                    );
+                  }
+
+                  return Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      VideoPlayer(viewModel.videoController),
+                      IconButton(
+                        iconSize: 64,
+                        icon: Icon(
+                          viewModel.videoController.value.isPlaying
+                              ? Icons.pause_circle
+                              : Icons.play_circle,
                           color: ThemeHelper.kWhite,
                         ),
+                        onPressed: viewModel.togglePlayPause,
                       ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
           Expanded(

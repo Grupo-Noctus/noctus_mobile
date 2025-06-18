@@ -6,6 +6,7 @@ abstract interface class IEnvironmentHelper {
   String? get urlCoursesEnrolled;
   String? get urlCoursesPreview;
   String? get urlUploadBase;
+  String? get urlUploadVideo;
 }
 
 final class EnvironmentHelper implements IEnvironmentHelper {
@@ -32,7 +33,9 @@ final class EnvironmentHelper implements IEnvironmentHelper {
   @override
   String get urlCoursesPreview => '$_urlBase/course/preview';
 
-  
   @override
   String? get urlUploadBase => '$_urlBase/uploads/';
+
+  @override
+  String? get urlUploadVideo => '$_urlBase/uploads/videos-lectures/';
 }

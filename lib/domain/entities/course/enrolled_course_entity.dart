@@ -31,9 +31,10 @@ final class EnrolledCourseEntity {
       nameCourse: map['nameCourse'],
       courseDescription: map['courseDescription'],
       courseImage: map['courseImage'],
-      modules: (map['modules'] as List)
-          .map((e) => ModuleEntity.fromMap(e as Map<String, dynamic>))
-          .toList(),
+      modules:
+          (map['modules'] as List)
+              .map((e) => ModuleEntity.fromMap(e as Map<String, dynamic>))
+              .toList(),
     );
   }
 

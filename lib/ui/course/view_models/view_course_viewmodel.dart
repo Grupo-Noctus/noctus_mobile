@@ -9,6 +9,8 @@ import 'package:noctus_mobile/domain/entities/video/video_entity.dart';
 class ViewCourseViewModel extends ChangeNotifier {
   late VideoPlayerController _videoController;
   bool _initialized = false;
+  bool _hasError = false;
+  String? _errorMessage;
   late EnrolledCourseEntity _course;
   ModuleEntity? _selectedModule;
   VideoEntity? _selectedVideo;
@@ -17,6 +19,8 @@ class ViewCourseViewModel extends ChangeNotifier {
   ViewCourseViewModel(this._localStorage);
 
   bool get initialized => _initialized;
+  bool get hasError => _hasError;
+  String? get errorMessage => _errorMessage;
   VideoPlayerController get videoController => _videoController;
   EnrolledCourseEntity get course => _course;
   List<ModuleEntity> get modules => _course.modules;
@@ -35,7 +39,12 @@ class ViewCourseViewModel extends ChangeNotifier {
 
   void _initializeFirstVideo(VideoEntity video) async {
     _selectedVideo = video;
-    await initializeVideo(video.url);
+    final videoUrl = video.url;
+    if (videoUrl.isNotEmpty) {
+      await initializeVideo(videoUrl);
+    } else {
+      _setError('Vídeo não disponível');
+    }
   }
 
   void toggleModule(ModuleEntity module) {
@@ -49,17 +58,44 @@ class ViewCourseViewModel extends ChangeNotifier {
 
   Future<void> selectVideo(VideoEntity video) async {
     _selectedVideo = video;
-    await initializeVideo(video.url);
+    final videoUrl = video.url;
+    if (videoUrl.isNotEmpty) {
+      await initializeVideo(videoUrl);
+    } else {
+      _setError('Vídeo não disponível');
+    }
   }
 
   Future<void> initializeVideo(String url) async {
+    _clearError();
     if (_initialized) {
       await _videoController.dispose();
+      _initialized = false;
     }
-    _videoController = VideoPlayerController.network(url);
-    await _videoController.initialize();
-    _videoController.play();
-    _initialized = true;
+
+    try {
+      _videoController = VideoPlayerController.network(url);
+      await _videoController.initialize();
+      _videoController.play();
+      _initialized = true;
+      notifyListeners();
+    } catch (e) {
+      _setError(
+        'Erro ao carregar o vídeo. Verifique sua conexão e tente novamente.',
+      );
+    }
+  }
+
+  void _setError(String message) {
+    _hasError = true;
+    _errorMessage = message;
+    _initialized = false;
+    notifyListeners();
+  }
+
+  void _clearError() {
+    _hasError = false;
+    _errorMessage = null;
     notifyListeners();
   }
 

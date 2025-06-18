@@ -1,5 +1,5 @@
 abstract interface class IEnvironmentHelper {
-  String? get urlBase; // adicione aqui
+  String? get urlBase;
   String? get urlAuthentication;
   String? get urlRegister;
   String? get urlCoursesAdmin;

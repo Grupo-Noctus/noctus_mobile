@@ -4,26 +4,34 @@ import 'package:noctus_mobile/domain/entities/register/register_entity.dart';
 import 'package:noctus_mobile/ui/register/pages/register_page.dart';
 import 'package:noctus_mobile/configs/injection_container.dart';
 import 'package:noctus_mobile/ui/register/pages/student_register_page.dart';
+import 'package:noctus_mobile/ui/course/view_models/view_course_binding.dart';
+import 'package:noctus_mobile/ui/course/pages/view_course.dart';
+
 
 final class RouteGeneratorHelper {
   static const String kRegister = '/';
   static const String kStudentRegister = '/student';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    final Object? args = settings.arguments;
+  final Object? args = settings.arguments;
 
-    return switch (settings.name) {
-      kRegister => createRoutePage(const RegisterPage()),
-      kStudentRegister => args is RegisterEntity 
-      ? MaterialPageRoute(
-          builder: (context) => StudentRegisterPage(
-            registerEntity: args,
+  return switch (settings.name) {
+    kRegister => createRoutePage(
+          ViewCourseBinding.provider(
+            child: const ViewCourseView(), videoUrl: '',
           ),
-        )
-      : createRouteError(),
-      _ => createRouteError(),
-    };
-  }
+        ),
+    kStudentRegister => args is RegisterEntity
+        ? MaterialPageRoute(
+            builder: (context) => StudentRegisterPage(
+              registerEntity: args,
+            ),
+          )
+        : createRouteError(),
+    _ => createRouteError(),
+  };
+}
+
 
   static PageRoute createRoutePage(Widget widget) {
     return MaterialPageRoute(

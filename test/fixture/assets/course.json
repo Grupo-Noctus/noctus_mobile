@@ -1,0 +1,30 @@
+{
+	"courses": [
+		{
+			"id": 1,
+			"name": "Curso Introdutório ao Docker",
+			"description": "Nesse curso vamos aprender as bases do Doker",
+			"image": "images-courses\\dockerjpg-0139f2a0-cce0-4002-a3de-e678dac339ea.jpeg",
+			"duration": 21,
+			"modules": [
+				{
+					"id": 1,
+					"name": "Modulo 1-Introdução ao Docker",
+					"description": "Alguns conteitos sobre Docker",
+					"order": 1,
+					"videos": [
+						{
+							"id": 1,
+							"name": "Video 1",
+							"description": "O que é Docker",
+							"duration": 32,
+							"idProgressVideo": null,
+							"viewed": null
+						}
+					]
+				}
+			]
+		}
+	],
+	"totalPages": 1
+}

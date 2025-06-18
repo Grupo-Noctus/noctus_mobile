@@ -1,0 +1,12 @@
+{
+	"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjM2LCJuYW1lIjoiRXZlbHluIFNjaHViZXJ0IiwidXNlcm5hbWUiOiJldmVseW5fbWF0ZXJhIiwiaW1hZ2UiOm51bGwsInJvbGUiOiJBRE1JTiIsImFjdGl2ZSI6dHJ1ZSwiZW1haWwiOiJldmVseW5AbWF0ZXJhLmNvbSIsImlhdCI6MTc1MDIwMjI1OCwiZXhwIjoxNzUwODA3MDU4fQ.utGXpHSUtzTJBkF9S_zwZgrzMwltWl4FNYcFlToJwf4",
+	"payload": {
+		"sub": 36,
+		"name": "Evelyn Schubert",
+		"username": "evelyn_matera",
+		"image": null,
+		"role": "ADMIN",
+		"active": true,
+		"email": "evelyn@matera.com"
+	}
+}

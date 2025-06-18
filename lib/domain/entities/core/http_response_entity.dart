@@ -24,10 +24,10 @@ final class HttpResponsePaginatedEntity {
 
   factory HttpResponsePaginatedEntity.fromMap(Map<String, dynamic> map) {
     return HttpResponsePaginatedEntity(
-      currentPage: map[kKeyCurrentPage],
-      totalItems: map[kKeyTotalItems],
-      totalPages: map[kKeyTotalPages],
-      data: map[kKeyData],
+      currentPage: map[kKeyCurrentPage] ?? 1,
+      totalItems: map[kKeyTotalItems] ?? (map['courses'] as List).length,
+      totalPages: map[kKeyTotalPages] ?? 1,
+      data: map[kKeyData] ?? map['courses'] ?? [],
     );
   }
 

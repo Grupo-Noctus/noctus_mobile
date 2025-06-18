@@ -65,7 +65,7 @@ final class RouteGeneratorHelper {
         args is EnrolledCourseEntity
             ? MaterialPageRoute(
               builder:
-                  (context) => ViewCourseBinding.provider(
+                  (context) => ViewCourseBinding.bind(
                     course: args,
                     child: const ViewCourseView(),
                   ),

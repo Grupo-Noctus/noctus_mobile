@@ -57,7 +57,7 @@ class ViewCourseView extends StatelessWidget {
                     ),
                   ),
                 ),
-              ] else if (state.initialized &&
+              ] else if (state.isPlayerInitialized &&
                   state.videoController != null) ...[
                 AspectRatio(
                   aspectRatio: state.videoController!.value.aspectRatio,
@@ -122,7 +122,7 @@ class ViewCourseView extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
                       ],
-                      ...viewModel.modules.map((module) {
+                      ...(viewModel.modules ?? []).map((module) {
                         final isSelected = module == state.selectedModule;
 
                         return Column(

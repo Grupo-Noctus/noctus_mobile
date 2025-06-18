@@ -12,17 +12,17 @@ abstract interface class IEnvironmentHelper {
 final class EnvironmentHelper implements IEnvironmentHelper {
   const EnvironmentHelper();
 
-  String get _urlBase => 'https://36d2-2804-f84-4-c568-5a0-e9cf-3839-dc56.ngrok-free.app';
+  String get _urlBase =>
+      'https://36d2-2804-f84-4-c568-5a0-e9cf-3839-dc56.ngrok-free.app';
 
   @override
   String? get urlBase => _urlBase;
-  
+
   @override
   String? get urlAuthentication => '$_urlBase/auth/login';
 
   @override
   String? get urlRegister => '$_urlBase/auth/register';
-
 
   @override
   String get urlCoursesAdmin => '$_urlBase/course/admin/find-many';

@@ -1,4 +1,5 @@
 import 'package:noctus_mobile/configs/factory_viewmodel.dart';
+import 'package:noctus_mobile/core/library/extensions.dart';
 import 'package:noctus_mobile/domain/entities/core/http_response_entity.dart';
 import 'package:noctus_mobile/domain/entities/register/register_entity.dart';
 
@@ -13,13 +14,13 @@ final class RegisterRepository implements IRegisterRepository {
 
   @override
   Future<bool> registerUser(RegisterEntity registerEntity) async {
-    final HttpResponseEntity? response = await _remoteDataSource.post(
+    final HttpResponseEntity? httpResponse = await _remoteDataSource.post(
       _urlAuthentication,
       await registerEntity.toFormData(),
     );
 
-    if (response != null && response.data != null) {
-      final data = response.data;
+    if (httpResponse.toBool()) {
+      final data = httpResponse!.data;
       if (data is String) {
         return data.toLowerCase() == 'true';
       }

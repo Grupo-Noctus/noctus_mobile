@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:noctus_mobile/configs/data_base_schema_helper.dart';
 import 'package:noctus_mobile/configs/factory_viewmodel.dart';
 import 'package:noctus_mobile/core/widgets/show_dialog_widget.dart';
+import 'package:noctus_mobile/data/repositories/login/login_repository.dart';
 import 'package:noctus_mobile/data/repositories/register/register_repository.dart';
 import 'package:noctus_mobile/domain/entities/core/request_state_entity.dart';
+import 'package:noctus_mobile/domain/entities/login/login_entity.dart';
 import 'package:noctus_mobile/domain/entities/register/register_entity.dart';
 import 'package:noctus_mobile/domain/error/register/register_errors.dart';
 import 'package:noctus_mobile/routing/route_generator.dart';
@@ -14,47 +18,54 @@ import 'package:noctus_mobile/utils/util_validator.dart';
 
 final class RegisterViewModel extends Cubit<IRequestState<String>> {
   final IRegisterRepository _repository;
-  late RegisterEntity _registerEntity;
+  final ILoginRepository _loginRepository;
+  
+  final INonRelationalDataSource _nonRelationalDataSource;
+  final IAppService _appService;
 
-  RegisterViewModel(this._repository) : super(const RequestInitiationState());
+  late RegisterEntity _registerEntity;
+  File? _image;
+  DateTime? _dateBirth;
+
+  RegisterViewModel(
+    this._repository, 
+    this._loginRepository,
+    this._nonRelationalDataSource,
+    this._appService)
+      : super(const RequestInitiationState());
+
+  RegisterEntity get registerEntity => _registerEntity;
+  File? get image => _image;
+  DateTime? get dateBirth => _dateBirth;
 
   void initRegister(RegisterEntity registerEntity) {
     _registerEntity = registerEntity;
   }
 
-  RegisterEntity get registerEntity => _registerEntity;
-
-  File? _image;
-  File? get image => _image;
   void setImage(File? image) {
     _image = image;
     emit(state);
   }
-
-  DateTime? _dateBirth;
-  DateTime? get dateBirth => _dateBirth;
 
   void setDateBirth(DateTime date) {
     _dateBirth = date;
     emit(state);
   }
 
-  void onRegister(RegisterEntity registerEntity) async {
+  Future<void> onRegister(RegisterEntity entity) async {
     try {
       _emitter(RequestProcessingState());
 
-      final String email = registerEntity.user.email;
+      _validateUserFields(entity);
 
-      if (!UtilValidator.isValidEmail(email)) {
-        throw EmailInvalidException();
-      }
+      _validateEmail(entity.user.email);
 
-      final bool isMatera = email.trim().toLowerCase().endsWith('@matera.com');
+      final bool isMatera = entity.user.email.trim().toLowerCase().endsWith('@matera.com');
 
       if (isMatera) {
-        await _registerMatera(registerEntity);
+        await _handleMateraRegister(entity);
       } else {
-        _onNavigateGoStudentRegister(registerEntity);
+        _navigateToStudentRegister(entity);
       }
     } catch (error) {
       _handleError(error);
@@ -63,93 +74,109 @@ final class RegisterViewModel extends Cubit<IRequestState<String>> {
     }
   }
 
-  Future<void> _registerMatera(RegisterEntity registerEntity) async {
-    _validateUserFields(registerEntity);
+  Future<void> _handleMateraRegister(RegisterEntity entity) async {
+    final adjusted = entity.copyWith(student: null);
 
-    final adjustedEntity = RegisterEntity(
-      user: registerEntity.user,
-      student: null,
-      imageUser: registerEntity.imageUser,
-    );
-
-    final bool success = await _repository.registerUser(adjustedEntity);
+    final success = await _repository.registerUser(adjusted);
 
     if (success) {
       showSnackBar(UtilText.labelRegisterSuccess);
-      _emitter(RequestCompletedState());
-      _onNavigateGoHome();
+      await _attemptAutoLogin(adjusted.user.email, adjusted.user.password);
     }
-
-    _emitter(RequestCompletedState());
   }
 
-  void onRegisterStudent(RegisterEntity registerEntity) async {
+  Future<void> onRegisterStudent(RegisterEntity entity) async {
     try {
       _emitter(RequestProcessingState());
 
-      _validateUserFields(registerEntity);
-
-      final bool success = await _repository.registerUser(registerEntity);
+      final success = await _repository.registerUser(entity);
 
       if (success) {
         showSnackBar(UtilText.labelRegisterSuccess);
-        _onNavigateGoHome();
+        await _attemptAutoLogin(entity.user.email, entity.user.password);
       }
     } catch (error) {
       _handleError(error);
     } finally {
       _emitter(RequestCompletedState());
+    }
+  }
+
+  Future<void> _attemptAutoLogin(String email, String password) async {
+    final login = LoginEntity(usernameOrEmail: email, password: password);
+    final result = await _loginRepository.authenticationAsync(login);
+
+    if (result != null) {
+      await _nonRelationalDataSource.saveString(
+        DataBaseNoSqlSchemaHelper.kUserLogged,
+        jsonEncode(result.user.toMap()),
+      );
+
+      await _nonRelationalDataSource.saveString(
+        DataBaseNoSqlSchemaHelper.kUserToken,
+        result.accessToken,
+      );
+
+      _navigateToHome(result.user.role);
+    } else {
+      showSnackBar('Login automático falhou. Faça login manualmente.');
     }
   }
 
   void _validateUserFields(RegisterEntity entity) {
-    final username = entity.user.username;
-    final password = entity.user.password;
-    final phoneNumber = entity.user.phoneNumber;
+    final user = entity.user;
 
-    if (!UtilValidator.isValidPassword(password)) {
+    if (!UtilValidator.isValidUsername(user.username)) {
+      throw UsernameInvalidException();
+    }
+    if (!UtilValidator.isValidPassword(user.password)) {
       throw PasswordInvalidException();
     }
-    if (!UtilValidator.isValidPhone(phoneNumber)) {
+    if (!UtilValidator.isValidPhone(user.phoneNumber)) {
       throw PhoneNumberInvalidException();
-    }
-    if (!UtilValidator.isValidUsername(username)) {
-      throw UsernameInvalidException();
     }
   }
 
-  void _onNavigateGoStudentRegister(RegisterEntity entity) {
-    getIt<IAppService>().navigateNamedTo(
+  void _validateEmail(String email) {
+    if (!UtilValidator.isValidEmail(email)) {
+      throw EmailInvalidException();
+    }
+  }
+
+
+  void _navigateToStudentRegister(RegisterEntity entity) {
+    _appService.navigateNamedTo(
       RouteGeneratorHelper.kStudentRegister,
       arguments: entity,
     );
   }
 
-  void _onNavigateGoHome() {
-    getIt<IAppService>().navigateNamedReplacementTo(RouteGeneratorHelper.kRegister); 
+  void _navigateToHome(String role) {
+    if (role == 'ADMIN') {
+      _appService.navigateNamedReplacementTo(RouteGeneratorHelper.kAdminHome);
+    } else {
+      _appService.navigateNamedReplacementTo(RouteGeneratorHelper.kStudentHome);
+    }
   }
 
-  void _emitter(IRequestState<String> state) {
-    if (isClosed) return;
-    emit(state);
+  void _emitter(IRequestState<String> newState) {
+    if (!isClosed) emit(newState);
   }
 
   void _handleError(Object error) {
-    final String message = _createErrorDescription(error);
+    final message = _mapErrorToMessage(error);
     showSnackBar(message);
     _emitter(RequestErrorState(error: error));
   }
 
-  String _createErrorDescription(Object? error) {
-    if (error is UsernameInvalidException) return UtilText.labelInvalidUsername;
-    if (error is EmailInvalidException) return UtilText.labelInvalidEmail;
-    if (error is PhoneNumberInvalidException) return UtilText.labelInvalidPhoneNumber;
-    if (error is PasswordInvalidException) return UtilText.labelInvalidPassword;
-
-    if (error is DioException) {
-      return error.response?.data["message"] ?? "An unexpected error occurred.";
-    }
-
-    return UtilText.labelRegisterFailure;
+  String _mapErrorToMessage(Object error) {
+    return switch (error) {
+      UsernameInvalidException _ => UtilText.labelInvalidUsername,
+      EmailInvalidException _ => UtilText.labelInvalidEmail,
+      PhoneNumberInvalidException _ => UtilText.labelInvalidPhoneNumber,
+      PasswordInvalidException _ => UtilText.labelInvalidPassword,
+      DioException dio => dio.response?.data["message"] ?? "An unexpected error occurred.",
+      _ => UtilText.labelRegisterFailure,
+    };
   }
 }

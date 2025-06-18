@@ -12,4 +12,5 @@ final class UtilText {
   static const String labelInvalidPassword = 'Informe uma senha válida com no mímino 6 caracteres!';
   static const String labelInvalidPhoneNumber = 'Informe um número de telefone válido!';
 
+  static const String courseFetchFailure = 'Erro ao busvcar os cursos';
 }

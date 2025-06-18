@@ -36,4 +36,15 @@ final class RegisterEntity {
     }
     return FormData.fromMap(map);
   }
+  RegisterEntity copyWith({
+    UserRegisterEntity? user,
+    StudentEntity? student,
+    String? imageUser,
+  }) {
+    return RegisterEntity(
+      user: user ?? this.user,
+      student: student ?? this.student,
+      imageUser: imageUser ?? this.imageUser,
+    );
+  }
 }

@@ -32,9 +32,10 @@ final class CourseEntity {
       description: map[kKeyDescription] as String,
       image: map[kKeyImage] as String,
       duration: map[kKeyDuration] as int,
-      modules: (map[kKeyModules] as List<dynamic>)
-          .map((e) => ModuleEntity.fromMap(e as Map<String, dynamic>))
-          .toList(),
+      modules:
+          (map[kKeyModules] as List<dynamic>)
+              .map((e) => ModuleEntity.fromMap(e as Map<String, dynamic>))
+              .toList(),
     );
   }
 
@@ -52,5 +53,9 @@ final class CourseEntity {
   String get imageUrl {
     const env = EnvironmentHelper();
     return '${env.urlUploadBase}$image';
+  }
+
+  factory CourseEntity.fromRemoteMap(Map<String, dynamic> map) {
+    return CourseEntity.fromMap(map);
   }
 }

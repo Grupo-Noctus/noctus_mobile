@@ -1,0 +1,32 @@
+[
+	{
+		"id": 1,
+		"name": "Curso Introdutório ao Docker",
+		"description": "Nesse curso vamos aprender as bases do Doker",
+		"image": "images-courses\\dockerjpg-0139f2a0-cce0-4002-a3de-e678dac339ea.jpeg",
+		"duration": 21,
+		"modules": [
+			{
+				"id": 1,
+				"name": "Modulo 1-Introdução ao Docker",
+				"description": "Alguns conteitos sobre Docker",
+				"order": 1
+			},
+			{
+				"id": 2,
+				"name": "Modulo 2-Comandos iniciais do Docker",
+				"description": "Comandos do Docker",
+				"order": 2
+			},
+			{
+				"id": 3,
+				"name": "Modulo 3-Docker e WSL",
+				"description": "O que é WSL e o que ele tem a ver com o Docker?",
+				"order": 3
+			}
+		],
+		"countModules": 3,
+		"countVideos": 1,
+		"durationVideos": 32
+	}
+]
